@@ -1,0 +1,47 @@
+.d-none {
+    display: none !important;
+}
+
+.mb-2 {
+    margin-bottom: 1rem;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.justify-content-center {
+    justify-content: center;
+}
+
+.w-50 {
+    width: 50%;
+}
+
+li.active a p {
+    color: #EB5E28;
+}
+
+li a p {
+    font-size:16px !important;
+}
+
+.menu-item {
+    font-size: 1.5em;
+    font-weight: 600;
+    line-height: 1.2em;
+    cursor: default;
+}
+
+.menu-item:hover {
+    opacity: 100%;
+    cursor: pointer;
+}
+
+.mr-2 {
+    margin-right: 2% !important;
+}
+
+.inactive {
+    opacity: 50%;
+}
