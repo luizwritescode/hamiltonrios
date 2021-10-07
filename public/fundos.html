@@ -1,212 +1,246 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Hamilton Rios</title>
 
-    <!-- update the version number as needed -->
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/8.6.3/firebase-app.js"></script>
-    <script defer src="/__/firebase/8.6.3/firebase-auth.js"></script>
-    <script defer src="/__/firebase/8.6.3/firebase-firestore.js"></script>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hamilton Rios</title>
 
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+  <!-- update the version number as needed -->
+  <!-- include only the Firebase features as you need -->
+  <script defer src="/__/firebase/8.6.3/firebase-app.js"></script>
+  <script defer src="/__/firebase/8.6.3/firebase-auth.js"></script>
+  <script defer src="/__/firebase/8.6.3/firebase-firestore.js"></script>
 
-    <link href="assets/css/animate.min.css" rel="stylesheet" >
-    <link href="assets/css/bootstrap.min.css" rel="stylesheet" >
-    <link href="assets/css/paper-dashboard.css" rel="stylesheet" >
+  <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+  
+  <link href="assets/css/animate.min.css" rel="stylesheet">
+  <link href="assets/css/paper-dashboard.css" rel="stylesheet">
 
-    <link href="assets/css/styles.css" rel="stylesheet" >
-    
-    
-    <style media="screen">
-        body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      </style>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
+  
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  
+  <link href="assets/css/styles.css" rel="stylesheet">
+
+  <style media="screen">
+    body {
+      background: #ECEFF1;
+      color: rgba(0, 0, 0, 0.87);
+      font-family: Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
 
 </head>
+
 <body>
-    <div class="wrapper">
-      <div class="sidebar">
-        <div class="sidebar-wrapper">
-            <div class="logo">
-                <h3 class="simple-text">Hamilton Rios</h3>
-            </div>
-          <ul class="nav">
-            <li class="">
-              <a href="./index.html">
-                <p>Dashboard</p>
-              </a>
-            </li>
-            <li class="active">
-              <a href="./fundos.html">
-                <p>Fundos</p>
-              </a>
-            </li>
-            <li class="">
-              <a href="./embarques.html">
-                <p>Embarques</p>
-              </a>
-            </li>
-          </ul>
+  <div class="wrapper">
+    <div class="sidebar">
+      <div class="sidebar-wrapper">
+        <div class="logo">
+          <h3 class="simple-text">Hamilton Rios</h3>
         </div>
+        <ul class="nav">
+          <li class="">
+            <a href="./index.html">
+              <p>Dashboard</p>
+            </a>
+          </li>
+          <li class="active">
+            <a href="./fundos.html">
+              <p>Fundos</p>
+            </a>
+          </li>
+          <li class="">
+            <a href="./embarques.html">
+              <p>Embarques</p>
+            </a>
+          </li>
+        </ul>
       </div>
+    </div>
 
-      <div class="main-panel">
+    <div class="main-panel">
 
-        <nav  class="navbar navbar-default">
-            <div style="display:flex;min-height: 104px;" class="container-fluid">
-              <div style="display:flex;align-self: center;" class="navbar-header">
-                <p class="navbar-brand">DOLAR HOJE: <span id='dolar'></span> </p>
-              </div>
-              <div class="collapse navbar-collapse">
-  
-              </div>
+      <nav class="navbar navbar-default">
+        <div style="display:flex;min-height: 104px;" class="container-fluid">
+          <div style="display:flex;align-self: center;" class="navbar-header">
+            <p class="navbar-brand">DOLAR HOJE: <span id='dolar'></span> </p>
+          </div>
+          <div class="collapse navbar-collapse">
+
+          </div>
+        </div>
+      </nav>
+
+      <div class="content">
+        <div class="container-fluid">
+          <div class="card">
+            <div class="header">
+              <h4 class="title">Fundos</h4>
             </div>
-          </nav>
+            <div class="content">
+              <table class='table'>
+                <thead>
+                  <tr>
+                    <th>
+                      Nome do Fundo
+                    </th>
+                    <th>
+                      Valor Real (R$)
+                    </th>
+                    <th>
+                      Valor Dolar (USD)
+                    </th>
+                  </tr>
+                </thead>
 
-        <div class="content">
-          <div class="container-fluid">
-              <div class="card">
-                  <div class="header">
-                      <h4 class="title">Fundos</h4>
-                  </div>
-                  <div class="content">
-                    <table class='table'>
-                        <thead>
-                            <tr>
-                                <th>
-                                    Nome do Fundo
-                                </th>
-                                <th>
-                                    Valor Real (R$)
-                                </th>
-                                <th>
-                                    Valor Dolar (USD)
-                                </th>
-                            </tr>
-                        </thead>
+                <tbody id='fundos'>
 
-                        <tbody id='fundos'>
+                </tbody>
 
-                        </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="header">
+              <span id="edit-funds" class="title menu-item mr-2">Editar Fundos</span>
+              <span id="new-fund" class="title menu-item mr-2 inactive">Novo Fundo</span>
+            </div>
+            <div class="content ">
+
+              <form method="POST">
+                <div class="row d-flex justify-content-center">
                 
-                    </table>
+                    <div id="edit-funds-card" class="form-group mw-75 ">
+                      <label for='edit-fundos'>Escolha o fundo</label>
+                      <select id='edit-fundos' name='selection' class="form-control border-input"></select>
+                    </div>
+
+                    <div id="new-fund-card" class="form-group mw-75 d-none">
+                      <label for='edit-fundos'>Adcionar novo fundo</label>
+                      <select id='edit-fundos' name='selection' class="form-control border-input"></select>
+                    </div>
+
+                </div>
+
+                <div id="fund-options" class="row d-flex justify-content-center">
+                  <div class="form-group mw-75 d-flex justify-content-center">
+
+                    <input type="radio" name="mode" id="adcionar-valor" class="">
+                    <label class="p-1" for="adcionar">Adcionar</label>
+
+                    <input type="radio" name="mode" id="subtrair-valor">
+                    <label class="p-1" for="subtrair">Subtrair</label>
+
                   </div>
-              </div>
-           
-              <div class="card">
-                <div class="header">
-                    <span class="title menu-item mr-2">Editar Fundos</span>
-                    <span class="title menu-item mr-2 inactive">Novo Fundo</span>
                 </div>
-                <div class="content">
 
-                  <form method="POST" >
-                    <div class="row">
-                      <div class="col-md-12">
-                        <div id="edit-funds-card" class="form-group w-50 ">
-                          <label for='edit-fundos'>Escolha o fundo</label>
-                          <select id='edit-fundos' name='selection' class="form-control border-input"></select>
-                        </div>
-                        <div id="new-fund-card" class="form-group w-50 ">
-                          <label for='edit-fundos'>Adcionar novo fundo</label>
-                          <select id='edit-fundos' name='selection' class="form-control border-input"></select>
-                        </div>
-                                              
-                      </div>
-                    </div> 
+                <div class="row d-flex justify-content-center">
+                  <div class="form-group mw-75">
 
-                    <div class="row">
-                      <div class="col-md-12 w-50">
-                        <input type="radio" name="mode" id="adcionar-valor" class="" >
-                        <label for="adcionar" class='mr-2'>Adcionar</label>
-    
-                        <input type="radio" name="mode" id="subtrair-valor" >
-                        <label for="subtrair">Subtrair</label>
-                      </div>
-                    </div>
-                    
-                    <div class="row">
-                      <div class="col-md-12 form-group w-50">
-                        <label for="change-value">Entre o valor</label>
-                        <input type="text" name="change-value" id="change-value" class="form-control border-input">
-                      </div>
-                    </div>
+                    <label for="change-value">Entre o valor</label>
+                    <input type="text" name="change-value" id="change-value" class="form-control border-input">
 
-                  
-                    <div class="row">
-                      <div class="col-md-12">
-                        <button class='btn' type="submit">Confirmar
-                        </button>
-
-                      </div>
-                    </div>
-              
-                  </form>
+                  </div>
                 </div>
+
+
+                <div class="row mw-75">
+                  <div class="col">
+
+                    <button class='btn' type="submit">Confirmar
+                    </button>
+
+                  </div>
+                </div>
+                
+              </form>
+
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <script src="assets/js/jquery-1.10.2.js" type="text/javascript"></script>
-	  <script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
-    <script src="assets/js/bootstrap-notify.js"></script>
-	  <script src="assets/js/paper-dashboard.js" type="text/javascript"></script>
+  <script src="assets/js/jquery-1.10.2.js" type="text/javascript"></script>
+  <script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
+  <script src="assets/js/bootstrap-notify.js"></script>
+  <script src="assets/js/paper-dashboard.js" type="text/javascript"></script>
 
-    <script src='app.js'></script>
+  <script src='app.js'></script>
 
-    <script>
-        const URL_FUNDOS = "https://us-central1-hamiltonrios-e760f.cloudfunctions.net/app/api/fundos"
+  <script>
+ 
+
+    const URL_FUNDOS = "https://us-central1-hamiltonrios-e760f.cloudfunctions.net/app/api/fundos"
+
+    const localurl = "http://localhost:5001/hamiltonrios-e760f/us-central1/app/api/fundos"
+
+    async function loadFundos(data, status, xhr) {
+
+
+
+      data.map(fundo => {
+        let td = document.createElement('td')
+
+        var $tr = $('<tr>').append(
+          $('<td>').text(fundo.Nome),
+          $('<td>').text(parseCurrency(fundo.REAL)),
+        );
+        $('#fundos').append($tr)
+
+        let option = document.createElement('option')
+        option.value = fundo.Nome
+        option.innerText = fundo.Nome
+
+        $('#edit-fundos').append(option)
+      })
+
+      localStorage.setItem('fundos', data)
+    }
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+      $("#new-fund").on("click", () => {
+        $("#edit-funds-card").addClass("d-none")
+        $("#edit-funds").addClass("inactive")
+        $("#new-fund-card").removeClass("d-none")
+        $("#new-fund").removeClass("inactive")
+      })
+      $("#edit-funds").on("click", () => {
+        $("#edit-funds-card").removeClass("d-none")
+        $("#edit-funds").removeClass("inactive")
+        $("#new-fund-card").addClass("d-none")
+        $("#new-fund").addClass("inactive")
         
-        const localurl =  "http://localhost:5001/hamiltonrios-e760f/us-central1/app/api/fundos"
-        
-        async function loadFundos(data, status, xhr) {
+      })
 
-      
+      let storage = localStorage.getItem('fundos') || false
 
-            data.map( fundo => {
-                let td = document.createElement('td')
-
-                var $tr = $('<tr>').append(
-                    $('<td>').text(fundo.Nome),
-                    $('<td>').text( parseCurrency(fundo.REAL) ),   
-                );
-                $('#fundos').append($tr)
-
-                let option = document.createElement('option')
-                option.value = fundo.Nome
-                option.innerText = fundo.Nome
-
-                $('#edit-fundos').append(option)
-            })
-
-          localStorage.setItem('fundos', data)
-        }
-
-
-        document.addEventListener('DOMContentLoaded', function() {
-
-          $("new-fund-card").classList.add("d-none")
-
-          let storage = localStorage.getItem('fundos') || false
-
-          if(storage) {
-            loadFundos( JSON.parse(storage) )
-          }else {
-            $.ajax({
-                type:'GET',
-                url: URL_FUNDOS,
-                success: function(data) { loadFundos(data) },
-                error: function(xhr, status, error) { console.log(error )}
-                })
-            
+      if (storage) {
+        loadFundos(JSON.parse(storage))
+      } else {
+        $.ajax({
+          type: 'GET',
+          url: URL_FUNDOS,
+          success: function (data) {
+            loadFundos(data)
+          },
+          error: function (xhr, status, error) {
+            console.log(error)
           }
         })
 
-        $("#edit-fundos").submit()
-    </script>
-  </body>
+      }
+    })
+
+    $("#edit-fundos").submit()
+  </script>
+</body>
+
 </html>
