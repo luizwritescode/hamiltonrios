@@ -1,0 +1,42 @@
+@keyframes sidebarCollapseAnimation {
+      
+      0.00000% {
+        transform: scale(1.00000, 1.00000);
+      }
+      8.33333% {
+        transform: scale(0.90027, 1.00000);
+      }
+      16.66667% {
+        transform: scale(0.82434, 1.00000);
+      }
+      25.00000% {
+        transform: scale(0.76807, 1.00000);
+      }
+      33.33333% {
+        transform: scale(0.72774, 1.00000);
+      }
+      41.66667% {
+        transform: scale(0.70000, 1.00000);
+      }
+      50.00000% {
+        transform: scale(0.68192, 1.00000);
+      }
+      58.33333% {
+        transform: scale(0.67094, 1.00000);
+      }
+      66.66667% {
+        transform: scale(0.66491, 1.00000);
+      }
+      75.00000% {
+        transform: scale(0.66204, 1.00000);
+      }
+      83.33333% {
+        transform: scale(0.66098, 1.00000);
+      }
+      91.66667% {
+        transform: scale(0.66073, 1.00000);
+      }
+      100.00000% {
+        transform: scale(0.66072, 1.00000);
+      }
+    }

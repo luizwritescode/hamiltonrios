@@ -63,3 +63,13 @@ async function getDolarExchangeRate() {
 
 
 getDolarExchangeRate()
+
+
+// document.addEventListener('DOMContentLoaded', function() {
+        
+
+//     const loadEl = document.querySelector('#load');
+
+//     const quotes = getBCBQuotes();
+   
+//   });

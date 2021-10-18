@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "hamiltonrios-e760f",
+  "private_key_id": "d5925fba9b4b4ccfafcc9f9b6512431854c7c231",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC4yMFF81FLdYMT\nw/mW9YfuYSTBz5AhttDeAPk184nh7DK+W1QI9dh1SSt7KeBJY5lQa0InliBHh6zI\nUI/sTyLqXsy/8gzUbHdzyp4H3KSG+RtpdY1sUcMQlX617/Bbmw6L2RSbvVvhMxWg\nay6+x1ez75cKVUNjc9PyYYy00XMlrg8TITk4joRLJj5bUtPs3J847K3c660vRrkU\nKhpvp8HW/XKFA5Ixmsj439d7lqkKJkWldAlhYYcyeV6/hvAqFHLxfRzIXv7DMKbf\npxU7uiiFNXlHegrkxH2PuMI+1Nn+s7QVsQTr/FNJDd/JDUvK3E4soKpULAqzyRlD\ndF1CosbzAgMBAAECggEANrBwB2hyrI8sirqLUcL8hrBopRXt9hR57+LA31djfSKf\niBhWoEpG1Luhq1OjBoV8WEFOdJHpntIIcMbrOcjYMB57oemdI3ewyOv0ZqZGaY4r\nr0Qz5ZWzUmK0fFt1u18CaKCIiWl7WoT4hyCB1sP/8IjeHphKmBItbgSyFMgSuNkw\n7WjItWUoF76mNJtjhQdWWK4VYntA5lxPvAtkXoVwkPROhdcnSFE1NdjLrg4B6NZj\nEVYoDwjHHa00uNwcJNo410p1zsRdUC4SlusRCvz+A+Q8xsHbeuiiVvDVlNIZG/cS\nWwe5oycayzLVCbbciZGBS/6oiYGixrQpD3A6OM03bQKBgQDaQRx06sWN6pZ27UYM\nOulPx5bChoM4dk41h6D76m8QdqwtnYKzCXUSkz3+UhSxURStf9oVWBtCXXUX/X3Y\nx+AzB8dCVr9/vlpPF23Y8CjPUX4RXkHRaaBcq6sbm2+1Yai4FOlPyxjUoULJsCir\nlXCF/zEJvOI0+ufaSt9DPvM2ZQKBgQDYvc19rygsv6vzjFvFG/5kVCe7K20Tr/yO\n0Mnqzd3/+SerJjZs4U5Il+eAcgeWWSV/oM+Ngng6mPJ62cFHkilnnPVhviaebh8M\nbUJWE8c8pHxQqZAK6E8a9r1g+39okgh+BjrcMLkujRyChTMFKA6mdLhtsJFA5OdL\nPMzoiKOmdwKBgA8b/NVXP2/wspPvHy9PkMFWJui2mTT6c7We+xUViLTSEl9iDR9J\n41Hy4ZLOqeIQo+bS+A0MOW7hu256vRCZ3bqKqk+8Y6t7SRM6ov8muRyJHrojFVli\n/5gKxmC15Qjghuafg/tjKwflVhNSX65pPQ35ubJb4ikayZxCHKyyGfJFAoGBAMpf\nLmeUDGb78InPHEDHCpiTGyXgPlCLmb2fpWjgH9DJywg6/cZb+MQ/UaDU19DCHAk3\nFZSDpc7Q0Fd0yssQ5iggnd1NtrFnEQaBXdcRUI6G5qxKJnyIvJPonprXOPdioxtI\npdzCgaW9jEkyJZlC9armgO2qV3XIRU4yzwCv1F2xAoGAUvXBarBUK6Iq9A/MDfex\nZrpoKPJ5KWa3xiaswwKIWCRApSvri+ydLvyJaolfsJBx1NA4eltsYjd1v/KlUWEA\nc4rj7YBXibMyOifbdEdUAw5AYCFVEaQHnbThjJTnKB0Qtdu+/g3QZi2B9goi0D5b\nM1dT0hPUoGyArLcFBMUUC1M=\n-----END PRIVATE KEY-----\n",
+  "client_email": "mavromati@hamiltonrios-e760f.iam.gserviceaccount.com",
+  "client_id": "116491935131490400276",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/mavromati%40hamiltonrios-e760f.iam.gserviceaccount.com"
+}
