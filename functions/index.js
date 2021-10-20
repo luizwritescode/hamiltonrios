@@ -119,5 +119,6 @@ app.get('/dolar', (req,res) => {
 // })
 
 
-export default functions.https.onRequest(app)
+const api = functions.https.onRequest(app)
+export default api 
 

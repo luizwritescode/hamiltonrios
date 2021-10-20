@@ -6,6 +6,10 @@
   "hosting": {
     "public": "public",
     "site": "hamiltonrios",
+    "rewrites": [ { 
+      "source": "**",
+      "function": "/index.html"
+    }],
     "ignore": [
       "firebase.json",
       "**/.*",
