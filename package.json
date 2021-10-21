@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "description": "dashboard for Hamilton Rios",
   "main": "main.js",
+  "type": "module",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.4",
     "babel-core": "^6.26.3",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
+    "firebase": "^9.1.3",
     "firebase-admin": "^9.9.0",
     "jquery": "^3.6.0",
     "jsdom": "^18.0.0",
@@ -16,12 +18,15 @@
   "devDependencies": {
     "@babel/core": "^7.15.8",
     "@babel/preset-env": "^7.15.8",
-    "babelify": "^10.0.0"
+    "babel-preset-es2015": "^6.24.1",
+    "babelify": "^10.0.0",
+    "gulp": "^4.0.2"
   },
   "scripts": {
     "test": "npm start",
-    "serve": "firebase emulators:start --only hosting,functions,firestore",
-    "make": "browserify public/main.js --outfile public/bundle.js --transform [ babelify --presets [ @babel/preset-env ] ]"
+    "serve": "firebase emulators:start --only hosting,functions,firestore,auth",
+    "gulp": "gulp make",
+    "make": "browserify --entry public/scripts/main.js --outfile public/scripts/bundle.js --transform [ babelify --presets [ @babel/preset-env ] ]"
   },
   "repository": {
     "type": "git",

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Hamilton Rios</title>
+      
+        <!--  FIREBASE -->
+        <!-- include only the Firebase features as you need -->
+        <script defer src="/__/firebase/8.6.3/firebase-app.js"></script>
+        <script defer src="/__/firebase/8.6.3/firebase-auth.js"></script>
+        <script defer src="/__/firebase/8.6.3/firebase-firestore.js"></script>
+        <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+        
+        <!--  BOOTSTRAP -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
+        
+        <!--  JQUERY -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        
+        <!--  FONT AWESOME -->
+        <link href="assets/css/all.min.css"></script>
+        <script defer src="assets/js/all.min.js"></script>
+        
+        <!--  PAPER DASHBOARD -->
+        <link href="assets/css/animate.min.css" rel="stylesheet">
+        <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+        <link href="assets/css/paper-dashboard.css" rel="stylesheet">
+        
+        <!--  CUSTOM CODE -->
+        <link href="assets/css/styles.css" rel="stylesheet">
+        <link src="assets/css/animation.css" rel="stylesheet">
+        
+        <script src="scripts/constants.js"></script>
+        <script src="scripts/authfunctions.js"></script>
+
+    <style media="screen">
+        body {
+        background: #ECEFF1;
+        color: rgba(0, 0, 0, 0.87);
+        font-family: Roboto, Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+
+    </head>
+    <body>
+            <div  class="container-fluid">
+                    <div class="d-flex flex-column justify-content-center">
+
+                        <div class="card w-50 m-4 align-self-center p-4">
+                            <span style="color:#7A9E9F;font-size:xx-large!important;">Hamilton Rios<span style="color:#555;font-size: medium;margin-left:1rem;"> Dashboard v1.0</span></span> 
+                        </div>
+                        <div class="card w-50 m-4 align-self-center">
+                            <div class="header">
+                                <h4 class="title">Login</h4>
+                            </div>
+
+                            <div class="content">   
+                                <div class="row d-flex justify-content-center">
+                                    
+                                    <form id='login-form' name="login-form" method="post" class="form">
+                                        <div id="login-card" class="form-group mw-75 px-2 ">
+                                            <label for='email'> email: </label>
+                                            <input id='email-login' name='email-login' class="form-control border-input mb-2" required />
+                                            <label for='password'> senha: </label>
+                                            <input id='password-login' name='password-login' class="form-control border-input mb-2" required  type="password"/>
+                                        </div>
+                                    </form>
+
+                                    <form id='signup-form' method="post" class="form">
+                                        <div id="signup-card" class="form-group mw-75 px-2 collapse">
+                                            <label for='email'> email: </label>
+                                            <input id='email-signup' name='email-signup' class="form-control border-input mb-2" required />
+                                            <label for='email'> senha: </label>
+                                            <input id='password-signup' name='password-signup' class="form-control border-input mb-2" required type="password"/>
+                                            <label for='email'> confirmar seha: </label>
+                                            <input id='confirm-password' name='confirm-password' class="form-control border-input mb-2" required type="password"/>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <div class="row mw-75">
+                                        <div id="google-login-div" class="d-flex flex-row justify-content-start col p-2">
+                                            <button id="google-login" class="btn btn-outline-dark" style="text-transform:none">
+                                                <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
+                                                Login com Google
+                                            </button>
+                                        </div>  
+                                        <div id="submit-login-div" class="d-flex flex-row justify-content-end col">
+                                            <button id="signup-instead" class="btn btn-secondary m-2">Criar Conta</button>
+                                            <button id="submit-login" type="submit" form="login-form" class="btn btn-primary m-2">Login</button>
+                                        </div>
+                                        <div id="submit-signup-div" class="d-flex flex-row justify-content-end col d-none">
+                                            <button id="login-instead" class="btn btn-secondary m-2">Ja tenho conta</button>
+                                            <button id="signup-submit" type="submit" form="submit-form" class="btn btn-primary m-2">Cadastrar-se</button>
+                                        </div>
+                                </div>
+                            </div>
+                                
+                        </div>
+                    </div>         
+        </div>
+
+    <script src="assets/js/jquery-1.10.2.js" type="text/javascript"></script>
+	<script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="assets/js/bootstrap-notify.js"></script>
+	<script src="assets/js/paper-dashboard.js" type="text/javascript"></script>
+
+    <script>
+
+          document.addEventListener('DOMContentLoaded', function () {
+            const MODE = "login";
+
+            $('#signup-instead').on('click', () => {
+                $('#submit-login-div').addClass('d-none')
+                $('#submit-signup-div').removeClass('d-none')
+                $('#login-card').addClass('collapse')
+                $('#signup-card').removeClass('collapse')
+            })
+            $('#login-instead').on('click', () => {
+                $('#submit-login-div').removeClass('d-none')
+                $('#submit-signup-div').addClass('d-none')
+                $('#login-card').removeClass('collapse')
+                $('#signup-card').addClass('collapse')
+            })
+
+            $('#login-form').on('submit', () => {
+
+                $.ajax({
+                    type : "POST",
+                    url  : "localhost:5001" + '/login',
+                    data : this.serialize(),
+
+                }) 
+
+            })
+
+            $('#google-login').on('click', () => {
+                $.ajax({
+                    type : "GET",
+                    url  : "http://localhost:5001" + '/googleauth',
+
+                }) 
+
+            })
+
+
+            
+          })
+
+    </script>
+
+    </body>
+</html>

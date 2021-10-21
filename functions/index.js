@@ -24,9 +24,9 @@ const firebaseConfig = {
         "token_uri": "https://oauth2.googleapis.com/token",
         "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
         "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-ro4dh%40hamiltonrios-e760f.iam.gserviceaccount.com"
-      }
-      )
-  };
+    }
+    )
+};
 
 admin.initializeApp(firebaseConfig);
 
@@ -34,9 +34,16 @@ const db = admin.firestore()
 
 const app = express()
 
+import { getAuth, connectAuthEmulator } from '@firebase/auth'
+import { createUser, signIn, googleSignIn, getRedirect, onAuthChange, provider } from './auth.js'
+
+//const auth = getAuth();
+// connectAuthEmulator(auth, "http://localhost:9099");
+
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 app.use(cors())
+
 
 app.get('/fundos', (req, res) => {
     (async () => {
@@ -81,37 +88,30 @@ app.post('/fundos', (req, res) => {
 
 app.get('/embarques', (req, res) => {
     (async () => {
-    try { 
-        let query = db.collection('embarques')
-        let response = []
-        await query.get().then( snapshot => {
-            let docs = snapshot.docs
-            for ( let doc of docs ) {
-                response.push(doc.data())
-            }
-            return response
-        })
-        return res.status(200).send( JSON.stringify(response) )
-    } catch(e) {
-        console.log(e)
-        return res.status(500).send(e)
-    }
-})();
-
+        try { 
+            let query = db.collection('embarques')
+            let response = []
+            await query.get().then( snapshot => {
+                let docs = snapshot.docs
+                for ( let doc of docs ) {
+                    response.push(doc.data())
+                }
+                return response
+            })
+            return res.status(200).send( JSON.stringify(response) )
+        } catch(e) {
+            console.log(e)
+            return res.status(500).send(e)
+        }
+    })();
 })
 
-app.get('/dolar', (req,res) => {
-    request("https://economia.awesomeapi.com.br/last/USD-BRL", function (error, response, body) {
-
-    if(error) {
-        return res.status(500).send(error)
-    } else {
-        let json = JSON.parse(body)
-        const rate = json["USDBRL"]["ask"]
-
-        return res.status(200).send(rate)
-    }
+app.get('/googleauth', (req, res) => {
+   
+    googleSignIn( getAuth(), provider, (user) => {
+        return res.status(200).send(user)
     })
+
 })
 
 // app.post('/api/embarques', (req, res) => {
