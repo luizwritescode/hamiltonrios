@@ -1,9 +1,5 @@
 
-import { createUserWithEmailAndPassword, signInWithPopup, getRedirectResult, onAuthStateChanged, GoogleAuthProvider } from "firebase/auth";
-
 export const FIREBASE_AUTH_EMULATOR_HOST="localhost:9099";
-
-export const provider = new GoogleAuthProvider();
 
 export const createUser = ( auth, email, password) => createUserWithEmailAndPassword(auth, email, password)
   .then((userCredential) => {
@@ -80,3 +76,23 @@ export const onAuthChange = (auth) => onAuthStateChanged(auth, (user) => {
       // ...
     }
   });
+
+export function onGoogleSignIn() {
+
+  var id_token = googleUser.getAuthResponse().id_token;
+    
+    var xhr = new XMLHttpRequest();
+  xhr.open('POST', 'https://yourbackend.example.com/tokensignin');
+  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  xhr.onload = function() {
+    console.log('Signed in as: ' + xhr.responseText);
+  };
+  xhr.send('token=' + id_token);
+}
+
+export function signOut() {
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+        console.log('User signed out.');
+    });
+}

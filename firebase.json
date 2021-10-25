@@ -6,10 +6,12 @@
   "hosting": {
     "public": "public",
     "site": "hamiltonrios",
-    "rewrites": [ { 
-      "source": "**",
-      "function": "/index.html"
-    }],
+    "rewrites": [
+      {
+        "source": "**",
+        "function": "/index.html"
+      }
+    ],
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -18,5 +20,22 @@
   },
   "functions": {
     "source": "functions"
+  },
+  "emulators": {
+    "firestore": {
+      "port": 3434
+    },
+    "auth": {
+      "port": 9099
+    },
+    "functions": {
+      "port": 5001
+    },
+    "hosting": {
+      "port": 5000
+    },
+    "ui": {
+      "enabled": true
+    }
   }
 }

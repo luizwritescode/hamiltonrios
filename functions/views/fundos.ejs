@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hamilton Rios</title>
+
+  <!--  FIREBASE -->
+  <!-- include only the Firebase features as you need -->
+  <script defer src="http://localhost:5000/__/firebase/8.6.3/firebase-app.js"></script>
+  <script defer src="http://localhost:5000/__/firebase/8.6.3/firebase-auth.js"></script>
+  <script defer src="http://localhost:5000/__/firebase/8.6.3/firebase-firestore.js"></script>
+  <script defer src="http://localhost:5000/__/firebase/init.js?useEmulator=true"></script>
+
+  <script src="https://apis.google.com/js/platform.js?onload=onLoadCallback" async defer>
+      window.onLoadCallback = function(){
+      gapi.auth2.init({
+          client_id: process.env.OAUTH_CLIENT_ID
+          });
+      }         
+  </script>
+
+  <!--  BOOTSTRAP -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
+
+  <!--  JQUERY -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+  <!--  FONT AWESOME -->
+  <link href="http://localhost:5000/assets/css/all.min.css">
+
+  <script defer src="http://localhost:5000/assets/js/all.min.js"></script>
+
+  <!--  PAPER DASHBOARD -->
+  <link href="http://localhost:5000/assets/css/animate.min.css" rel="stylesheet">
+  <link href="http://localhost:5000/assets/css/bootstrap.min.css" rel="stylesheet">
+  <link href="http://localhost:5000/assets/css/paper-dashboard.css" rel="stylesheet">
+
+  <!--  CUSTOM CODE -->
+  <link href="http://localhost:5000/assets/css/styles.css" rel="stylesheet">
+  <link src="http://localhost:5000/assets/css/animation.css" rel="stylesheet">
+
+  <script type="module" src="http://localhost:5001/hamiltonrios-e760f/us-central1/default/static/scripts/auth.js"></script>
+
+  <style media="screen">
+      body {
+          background: #ECEFF1;
+          color: rgba(0, 0, 0, 0.87);
+          font-family: Roboto, Helvetica, Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+      }
+  </style>
+
+</head>
+
+<body>
+
+  <div id="body-wrapper" class="wrapper">
+
+
+    <div class="sidebar">
+
+      <div class="sidebar-wrapper">
+<!-- 
+        <div id="collapse-sidebar-div" class="container-fluid d-flex flex-row justify-content-end m-2">
+          <button id="collapse-sidebar-btn" class="btn">collapse</button>
+        </div> -->
+
+        <div class="logo">
+          <h2 id="logo-text" class="simple-text">Hamilton Rios</h2>
+        </div>
+        <ul class="nav">
+          <li class="">
+            <a class="d-flex flex-row align-items-center " href="./index.html">
+              <i style="font-size: 2.5rem; margin-right: 1rem;" class="fas fa-university m-2"></i>
+              <p>Dashboard</p>
+            </a>
+          </li>
+          <li class=" active">
+            <a class="d-flex flex-row" href="./fundos.html">
+              <i style="font-size: 2.5rem; margin-right: 1rem;" class="fas fa-piggy-bank active"></i>
+              <p>Fundos</p>
+            </a>
+          </li>
+          <li class="">
+            <a class="d-flex flex-row" href="./embarques.html">
+              <i style="font-size: 2.5rem; margin-right: 1rem;" class="fas fa-shipping-fast"></i>
+              <p>Embarques</p>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="main-panel">
+
+      <nav class="navbar navbar-default d-flex justify-content-start">
+        <div style="display:flex;min-height: 109px;" class="justify-content-start flex-fill">
+
+          
+          <div class="navbar-header d-flex flex-column flex-fill justify-content-center ">
+            <p class="navbar-brand">DOLAR:
+              <span id='dolar'></span>
+            </p>
+            <small id="dolar-timestamp">timestamp</small>
+          </div>
+        
+          <button id="logout" onclick="logout()" class="btn btn-danger mx-2">
+            <i class="fas fa-power-off"></i>
+          </button>
+        </div>
+      </nav>
+
+
+      <div class="content">
+        <div class="container-fluid">
+
+          <div class="container-fluid d-flex flex-row justify-content-end mb-4">
+            <button onclick="queryDatabase();" class="btn">
+              <i class="fas fa-sync-alt"></i>
+            </button>
+          </div>
+
+          <div class="card">
+            <div class="header">
+              <h4 class="title">Valores Disponiveis</h4>
+            </div>
+            <div class="content">
+              <table class='table'>
+                <thead>
+                  <tr>
+                    <th>
+                      Nome do Fundo
+                    </th>
+                    <th>
+                      Valor Real (R$)
+                    </th>
+                    <th>
+                      Valor Dolar (USD)
+                    </th>
+                  </tr>
+                </thead>
+
+                <tbody id='fundos'>
+
+                </tbody>
+
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="header">
+              <span id="edit-funds" class="title menu-item mr-2">Editar Fundos</span>
+              <span id="new-fund" class="title menu-item mr-2 inactive">Novo Fundo</span>
+            </div>
+
+
+            <div class="content d-flex justify-content-center m-2 w-100">
+
+              <form class='form w-50' onsubmit="()=>postNewFund()" method="POST">
+                <div class="row d-flex justify-content-center">
+
+                  <div id="edit-funds-card" class="form-group mw-75 ">
+                    <label for='edit-fundos'>Escolha o fundo:</label>
+                    <select id='edit-fundos' name='selection' class="form-control border-input" aria-placeholder="fundo"
+                      required></select>
+                  </div>
+
+                  <div id="new-fund-card" class="form-group mw-75 d-none">
+                    <label for='edit-fundos'>Adcionar novo fundo:</label>
+                    <input id='new-fundo' name='new-fundo' class="form-control border-input" placeholder="nome"
+                      required></input>
+                  </div>
+
+                </div>
+
+                <div id="fund-options" class="row d-flex justify-content-center">
+
+                  <div class="form-group mw-75 d-flex flex-column">
+
+                    <div class="w-100 align-self-center">
+                      <label for="change-value">Entre o valor:</label>
+                      <input type="text" name="change-value" id="change-value" class="form-control border-input"
+                        placeholder="R$ 0,00" required>
+
+                    </div>
+
+                  </div>
+
+
+                  <!-- <div id="add-or-sub" class="form-group mw-75 d-flex align-items-center">
+
+                    <input type="radio" name="mode" id="adcionar-valor" class="ml-1">
+                    <label class="align-self-center m-2" for="adcionar">Adcionar</label>
+
+                    <input type="radio" name="mode" id="subtrair-valor">
+                    <label class="align-self-center m-2" for="subtrair">Subtrair</label>
+
+                  </div> -->
+
+                </div>
+
+
+
+                <div id="confirm" class="row mw-75">
+                  <div class="d-flex flex-row justify-content-end col">
+
+                    <button class='btn my-2' type="submit">Confirmar
+                    </button>
+
+                  </div>
+                </div>
+
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--  JS  -->
+  <script src="http://localhost:5000/assets/js/jquery-1.10.2.js" type="text/javascript"></script>
+  <script src="http://localhost:5000/assets/js/bootstrap.min.js" type="text/javascript"></script>
+  <script src="http://localhost:5000/assets/js/bootstrap-notify.js"></script>
+  <script src="http://localhost:5000/assets/js/paper-dashboard.js" type="text/javascript"></script>
+
+
+
+  <script>
+    const URL_FUNDOS = "https://us-central1-hamiltonrios-e760f.cloudfunctions.net/app/api/fundos"
+
+    const localurl = "http://localhost:5001/hamiltonrios-e760f/us-central1/app/api/fundos"
+
+    
+
+    async function getDolarQuote() {
+      let URL =
+        "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='10-14-2021'&$top=100&$format=json";
+
+      $.ajax({
+        type: "GET",
+        url: URL,
+        success: function (data) {
+          let compra = data.value[0].cotacaoCompra
+          let venda = data.value[0].cotacaoVenda
+          let quote = (compra + venda) / 2
+
+          localStorage.setItem('dolar_quote', quote)
+          localStorage.setItem('dolar_timestamp', data.value[0].dataHoraCotacao.split('.')[0])
+        },
+        error: function (xhr, status, err) {
+          return alert(err)
+        }
+      })
+
+
+    }
+
+    function parseCurrency(val) {
+      let count = 0
+      let decimal = val.split(".")[1];
+      val = val.split(".")[0].toString()
+      for (var i = val.length - 1; i > 0; i--) {
+        count++
+        if (count >= 3) {
+          val = val.substring(0, i) + ',' + val.substring(i, val.length)
+          count = 0
+        }
+      }
+      val = "$ " + val + "." + decimal
+      return val
+    }
+
+    function cleanTable() {
+      $("tbody").html("")
+    }
+    function cleanDolarDisplay() {
+      $("#dolar").html(" carregando...")
+      $("#dolar-timestamp").html("--")
+    }
+
+    function queryDatabase() {
+      cleanTable()
+      cleanDolarDisplay()
+
+      $.ajax({
+          type: 'GET',
+          url: URL_FUNDOS,
+          success: function (data) {
+            loadFundos(data)
+          },
+          error: function (xhr, status, error) {
+            console.log(error)
+          }
+        })
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+      var sidebarOpen = true;
+
+      $("#collapse-sidebar-btn").on("click", () => {
+        $(".nav").toggleClass("collapse")
+        $(".sidebar").toggleClass("collapse")
+        $(".sidebar--collapsed").toggleClass("collapse")
+
+        sidebarOpen = !sidebarOpen
+      })
+
+      $("#new-fund").on("click", () => {
+        $("#edit-funds-card").addClass("d-none")
+        $("#edit-funds").addClass("inactive")
+        $("#edit-funds").attr("required", false)
+        $("#new-fund-card").removeClass("d-none")
+        $("#new-fund").removeClass("inactive")
+        $("#new-fund").attr("required", true)
+
+        $("#add-or-sub").addClass("d-none")
+
+
+      })
+      $("#edit-funds").on("click", () => {
+        $("#edit-funds-card").removeClass("d-none")
+        $("#edit-funds").removeClass("inactive")
+        $("#edit-funds").attr("required", true)
+        $("#new-fund-card").addClass("d-none")
+        $("#new-fund").addClass("inactive")
+        $("#new-fund").attr("required", false)
+        $("#add-or-sub").removeClass("d-none")
+      })
+
+      let storage = JSON.parse(localStorage.getItem('fundos')) || false
+
+
+
+      if (localStorage.length < 2 ) {
+          queryDatabase()
+      } else if (storage) {
+        loadFundos(storage)
+      }
+
+    })
+  </script>
+</body>
+
+</html>
