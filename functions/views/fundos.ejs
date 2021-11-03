@@ -7,12 +7,8 @@
   <title>Hamilton Rios</title>
 
   <!--  FIREBASE -->
-  <!-- include only the Firebase features as you need -->
-  <script defer src="http://localhost:5000/__/firebase/8.6.3/firebase-app.js"></script>
-  <script defer src="http://localhost:5000/__/firebase/8.6.3/firebase-auth.js"></script>
-  <script defer src="http://localhost:5000/__/firebase/8.6.3/firebase-firestore.js"></script>
-  <script defer src="http://localhost:5000/__/firebase/init.js?useEmulator=true"></script>
-
+  <meta name="google-signin-client_id"
+  content="972835792340-81lomg4sb1ggpa31ad87irild3fcnftc.apps.googleusercontent.com">
   <script src="https://apis.google.com/js/platform.js?onload=onLoadCallback" async defer>
       window.onLoadCallback = function(){
       gapi.auth2.init({
@@ -43,7 +39,7 @@
   <link href="http://localhost:5000/assets/css/styles.css" rel="stylesheet">
   <link src="http://localhost:5000/assets/css/animation.css" rel="stylesheet">
 
-  <script type="module" src="http://localhost:5001/hamiltonrios-e760f/us-central1/default/static/scripts/auth.js"></script>
+ 
 
   <style media="screen">
       body {
@@ -106,9 +102,13 @@
             <p class="navbar-brand">DOLAR:
               <span id='dolar'></span>
             </p>
-            <small id="dolar-timestamp">timestamp</small>
+            <small style="margin-left: 1.6rem;" id="dolar-timestamp">timestamp</small>
           </div>
-        
+          
+          <div class='d-flex align-self-center' id="curren-user">
+            <span id="username"></span>
+          </div>
+
           <button id="logout" onclick="logout()" class="btn btn-danger mx-2">
             <i class="fas fa-power-off"></i>
           </button>
@@ -238,11 +238,10 @@
 
     const localurl = "http://localhost:5001/hamiltonrios-e760f/us-central1/app/api/fundos"
 
-    
+   
 
     async function getDolarQuote() {
-      let URL =
-        "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='10-14-2021'&$top=100&$format=json";
+      let URL = "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='10-14-2021'&$top=100&$format=json";
 
       $.ajax({
         type: "GET",
@@ -302,7 +301,9 @@
         })
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', async function () {
+
+      const USERNAME = await localStorage.getItem('username')
 
       var sidebarOpen = true;
 
@@ -335,6 +336,8 @@
         $("#new-fund").attr("required", false)
         $("#add-or-sub").removeClass("d-none")
       })
+
+      $("#username").text(USERNAME.replace(/"/g, ""))
 
       let storage = JSON.parse(localStorage.getItem('fundos')) || false
 

@@ -3,7 +3,11 @@ import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
+import https from 'https'
+import {OAuth2Client}  from 'google-auth-library';
 dotenv.config();
+
+const client = new OAuth2Client(process.env.OAUTH_CLIENT_ID,);
 
 import admin from 'firebase-admin'
 
@@ -35,57 +39,80 @@ const db = admin.firestore()
 
 const app = express()
 
-import { getAuth, connectAuthEmulator } from '@firebase/auth'
-
-
-//const auth = getAuth();
-// connectAuthEmulator(auth, "http://localhost:9099");
-
 //MIDDLEWARE
 app.set('views', './views')
 app.set('view engine', 'ejs')
 
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
-app.use(cookieParser)
+//app.use(cookieParser)
 app.use(cors())
 
-//app.use('/app', checkAuth )
+app.use('/', checkAuth )
 
-app.use('/static', express.static('public'))
+//app.use(express.static('public'))
 
-//app.use('/cookie', setCookie)
+// //app.use('/cookie', setCookie)
 
 
-app.get('/', (req,res)=> {
-    if(  res.statusCode == 200) 
-        res.render('index')
+app.get('/', checkAuth, (req,res) => {
+    
+    res.redirect('/hamiltonrios-e760f/us-central1/default/app');
+})
 
-    return res.send("")
+app.get('/app', (req,res)=> {
+       return res.render('index')
+
+
     
 })
+
 app.get('/login', (req, res) => {
-    if( res.statusCode == 200) 
-        res.render('login')
-    return res.send("")
+    if( res.statusCode == 200) {
+        return res.render('login')
+    }
+    
 })
 
 app.post('/login', (req,res) => {
+
     let token = req.body.token
 
     console.log(token);
+    async function verify() {
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: process.env.OAUTH_CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
+            // Or, if multiple clients access the backend:
+            //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+        });
+        const payload = ticket.getPayload();
+        const userid = payload['sub'];
+        // If request specified a G Suite domain:
+        // const domain = payload['hd'];
+      }
+      verify()
+      .then( () => {
+          res.cookie('session', token );
+          res.send('success');
+      }).catch(console.error);
 })
+
 app.get('/fundos', (req,res)=> {
+    let user = req.user
+
     if( res.statusCode == 200) 
         res.render('fundos')
-        return res.send("")
+    return res.send("")
 })
+
 app.get('/embarques', (req,res)=> {
     if( res.statusCode == 200) 
         res.render('embarques')
     return res.send("")
 })
-app.get('/fundos', (req, res) => {
+
+app.get('/api/fundos', (req, res) => {
     (async () => {
     try { 
         let query = db.collection('fundos')
@@ -106,7 +133,7 @@ app.get('/fundos', (req, res) => {
 
 })
 
-app.post('/fundos', checkAuth, (req, res) => {
+app.post('/api/fundos', checkAuth, (req, res) => {
     
     let real = req.body.data;
     let nome = req.body.NOME;
@@ -126,7 +153,7 @@ app.post('/fundos', checkAuth, (req, res) => {
 })
 
 
-app.get('/embarques', checkAuth, (req, res) => {
+app.get('/api/embarques', checkAuth, (req, res) => {
     (async () => {
         try { 
             let query = db.collection('embarques')
@@ -149,28 +176,34 @@ app.get('/embarques', checkAuth, (req, res) => {
 
 function checkAuth(req, res, next) {
 
-    if (res.cookie.token)
+    console.log('cookie ' + req.body.token)
+
+    if (req.body.token)
         return next();
-    else
-        res.redirect('/login')
+    else {
+        next()
+        return res.redirect('/hamiltonrios-e760f/us-central1/default/login')
+    }
+        
 }
 
-function setCookie(req, res, next) {
-        // check if client sent cookie
-    var cookie = req.cookies.token;
-    if (cookie === undefined) {
-        // no: set a new cookie
-        var randomNumber=Math.random().toString();
-        randomNumber=randomNumber.substring(2,randomNumber.length);
-        res.cookie('token', randomNumber, { maxAge: 900000, httpOnly: true });
-        console.log('cookie created successfully');
-    } else {
-        // yes, cookie was already present 
-        console.log('cookie exists', cookie);
-    } 
-    next(); // <-- important!
-}
+// function setCookie(req, res, next) {
+//         // check if client sent cookie
+//     var cookie = req.cookies.token;
+//     if (cookie === undefined) {
+//         // no: set a new cookie
+//         var randomNumber=Math.random().toString();
+//         randomNumber=randomNumber.substring(2,randomNumber.length);
+//         res.cookie('token', randomNumber, { maxAge: 900000, httpOnly: true });
+//         console.log('cookie created successfully');
+//     } else {
+//         // yes, cookie was already present 
+//         console.log('cookie exists', cookie);
+//     } 
+//     next(); // <-- important!
+// }
 
-const api = functions.https.onRequest(app)
-export default api 
+const hr = functions.https.onRequest(app)  
+
+export default hr
 

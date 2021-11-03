@@ -23,7 +23,7 @@
   },
   "emulators": {
     "firestore": {
-      "port": 3434
+      "port": 3483
     },
     "auth": {
       "port": 9099

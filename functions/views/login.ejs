@@ -6,18 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Hamilton Rios</title>
 
-    <!--  FIREBASE -->
-    <!-- include only the Firebase features as you need -->
-    <script defer src="http://localhost:5000/__/firebase/8.6.3/firebase-app.js"></script>
-    <script defer src="http://localhost:5000/__/firebase/8.6.3/firebase-auth.js"></script>
-    <script defer src="http://localhost:5000/__/firebase/8.6.3/firebase-firestore.js"></script>
-    <script defer src="http://localhost:5000/__/firebase/init.js?useEmulator=true"></script>
-
+     <!-- FIREBASE -->
     <meta name="google-signin-client_id"
         content="972835792340-81lomg4sb1ggpa31ad87irild3fcnftc.apps.googleusercontent.com">
-    <script src="https://apis.google.com/js/platform.js?onload=onLoadCallback" async defer>
-
-    </script>
+        <script src="https://apis.google.com/js/platform.js?onload=onLoadCallback" async defer>
+            window.onLoadCallback = function(){
+            gapi.auth2.init({
+                client_id: process.env.OAUTH_CLIENT_ID
+                });
+            }         
+        </script>
+      
 
     <!--  BOOTSTRAP -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -40,9 +39,6 @@
     <!--  CUSTOM CODE -->
     <link href="http://localhost:5000/assets/css/styles.css" rel="stylesheet">
     <link src="http://localhost:5000/assets/css/animation.css" rel="stylesheet">
-
-    <script type="module" src="http://localhost:5001/hamiltonrios-e760f/us-central1/default/static/scripts/auth.js">
-    </script>
 
     <style media="screen">
         body {
@@ -101,32 +97,16 @@
                     <div class="row mw-75">
                         <div id="google-login-div" class="d-flex flex-row justify-content-start col p-2">
                             <script>
-                                function onSignIn(googleUser) {
-                                    var profile = googleUser.getBasicProfile();
-                                    alert(profile)
-                                    console.log('ID: ' + profile
-                                .getId()); // Do not send to your backend! Use an ID token instead.
-                                    console.log('Name: ' + profile.getName());
-                                    console.log('Image URL: ' + profile.getImageUrl());
-                                    console.log('Email: ' + profile
-                                .getEmail()); // This is null if the 'email' scope is not present.
-                                }
+                               
                             </script>
-                            <div id="google-login" class=" g-signin2" style="text-transform:none"
+                            <div id="google-login" class="g-signin2" style="text-transform:none"
                                 data-onsuccess="onSignIn">
                                 <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in"
                                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
 
                             </div>
-                            <!-- <script>
-                                function googleSignOut() {
-                                    var auth2 = gapi.auth2.getAuthInstance();
-                                    auth2.signOut().then(function () {
-                                        console.log('User signed out.');
-                                    });
-                                }
-                            </script>
-                           <a href="" onclick="googleSignOut()"id="google-logout">Sign Out</a> -->
+                       
+                           <a href="" onclick="googleSignOut()"id="google-logout">Sign Out</a>
                         </div>
                         <div id="submit-login-div" class="d-flex flex-row justify-content-end col">
                             <button id="signup-instead" class="btn btn-secondary m-2">Criar Conta</button>
@@ -152,7 +132,7 @@
 
     <script>
         var googleUser = {};
-
+        const BASEURL = "http://localhost:5001/hamiltonrios-e760f/us-central1/default"
 
         window.onLoadCallback = function () {
             // gapi.auth2.init({
@@ -170,23 +150,38 @@
             });
         };
 
+        function googleSignOut() {
+                                    var auth2 = gapi.auth2.getAuthInstance();
+                                    auth2.signOut().then(function () {
+                                        console.log('User signed out.');
+                                    });
+                                }
+
+                               
         function attachSignin(element) {
             auth2.attachClickHandler(element, {}, function (googleUser) {
-                $('#google-login').innerText = "Signed in " + googleUser.getBasicProfile().getName();
+                $('.g-signin2').innerText = "Signed in as" + googleUser.getBasicProfile().getName();
             }, function (error) {
                 console.log(JSON.stringify(error, undefined, 2));
             });
         }
 
         function onSignIn(googleUser) {
+         
             var id_token = googleUser.getAuthResponse().id_token;
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/login');
+            xhr.open('POST', BASEURL + '/login');
             xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.onload = function() {
-            console.log('Signed in as: ' + xhr.responseText);
+                if(xhr.responseText == 'success')
+                localStorage.setItem("current-user", id_token);
+                console.log('Signed in as: ' + xhr.responseText);
+                location.assign(BASEURL + '/app')
             };
             xhr.send(JSON.stringify({token: id_token}));
+
+            var profile = googleUser.getBasicProfile();
+            localStorage.setItem("username", JSON.stringify(profile.getName()))
         }
         document.addEventListener('DOMContentLoaded', function () {
 

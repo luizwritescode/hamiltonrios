@@ -1,7 +1,7 @@
-const {OAuth2Client} = require('google-auth-library');
+import {OAuth2Client}  from 'google-auth-library';
 
 const client = new OAuth2Client(process.env.OAUTH_CLIENT_ID,);
-async function verify() {
+export default async function verify() {
   const ticket = await client.verifyIdToken({
       idToken: token,
       audience: process.env.OAUTH_CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
