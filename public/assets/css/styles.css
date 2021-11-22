@@ -1,3 +1,18 @@
+body {
+    font-family: 'Raleway', sans-serif;
+}
+
+#dolar {
+    cursor: pointer !important;
+}
+
+.danger {
+border: 1px solid #dd0000 !important;
+}
+
+th.head-primary {
+    color: #51cbce!important;
+}
 .fas {
     font-size: 3rem !important;
 }
@@ -33,6 +48,11 @@
   box-shadow: inset -1px 0px 0px 0px #dddddd;
 }
 
+#sync-dolar {
+    cursor: pointer;
+    padding: 0.5rem !important;
+}
+
 .nav {
     padding-left: 0;
     margin-bottom: 0;
@@ -57,6 +77,11 @@
 .nav-item > a > p 
 {
     color: #66615b !important;
+}
+
+p.nav-brand {
+
+    cursor: default;
 }
 
 select#edit-fundos {
@@ -115,6 +140,9 @@ input#change-value {
     margin: 4rem !important;
 }
 
+.p-1 {
+    padding: 1rem !important;
+}
 .p-2 {
     padding: 2rem !important;
 }

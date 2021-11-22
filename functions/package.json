@@ -18,15 +18,18 @@
     "@firebase/app": "^0.7.4",
     "@firebase/auth": "^0.18.3",
     "@google-cloud/functions": "^1.2.0",
+    "axios": "^0.24.0",
+    "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
     "dotenv": "^10.0.0",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
-    "firebase-admin": "^9.2.0",
-    "firebase-functions": "^3.15.7",
+    "firebase-admin": "^9.12.0",
+    "firebase-functions": "^3.16.0",
     "firebaseauth": "^1.0.0",
     "google-auth-library": "^7.10.1",
-    "node-html-parser": "^3.3.5"
+    "node-html-parser": "^3.3.5",
+    "serve-favicon": "^2.5.0"
   },
   "devDependencies": {
     "firebase-functions-test": "^0.2.0",

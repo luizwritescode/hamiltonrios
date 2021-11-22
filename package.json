@@ -26,6 +26,8 @@
   "scripts": {
     "test": "npm start",
     "serve": "firebase emulators:start --only hosting,functions,firestore,auth",
+    "deploy": "firebase deploy --only hosting,functions,firestore,auth",
+    "hosting": "firebase deploy --only hosting",
     "gulp": "gulp make",
     "make": "browserify --entry public/scripts/main.js --outfile public/scripts/bundle.js --transform [ babelify --presets [ @babel/preset-env ] ]"
   },

@@ -6,17 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Hamilton Rios</title>
 
-     <!-- FIREBASE -->
+    <!-- GOOGLE -->
     <meta name="google-signin-client_id"
-        content="972835792340-81lomg4sb1ggpa31ad87irild3fcnftc.apps.googleusercontent.com">
-        <script src="https://apis.google.com/js/platform.js?onload=onLoadCallback" async defer>
-            window.onLoadCallback = function(){
-            gapi.auth2.init({
-                client_id: process.env.OAUTH_CLIENT_ID
-                });
-            }         
-        </script>
-      
+       content="972835792340-3m1k3q9chcsv1vqfjoq3kiplnejt7tpf.apps.googleusercontent.com">
+     <script src="https://apis.google.com/js/platform.js?onload=onLoadCallback" async defer></script>
 
     <!--  BOOTSTRAP -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -95,20 +88,22 @@
                     </div>
 
                     <div class="row mw-75">
-                        <div id="google-login-div" class="d-flex flex-row justify-content-start col p-2">
-                            <script>
-                               
-                            </script>
-                            <div id="google-login" class="g-signin2" style="text-transform:none"
+
+                        <div id="google-login-div" class="d-flex flex-row justify-content-end col p-2">
+                            <button id="google-logout" class="mx-2 btn btn-secondary" onclick="googleSignOut()">Sign Out</button>
+                     
+                            <div id="google-login" class="g-signin2 " style="text-transform:none"
                                 data-onsuccess="onSignIn">
                                 <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in"
                                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
-
+                                Sign In
                             </div>
-                       
-                           <a href="" onclick="googleSignOut()"id="google-logout">Sign Out</a>
                         </div>
-                        <div id="submit-login-div" class="d-flex flex-row justify-content-end col">
+                       
+                    </div>
+
+
+                        <!-- <div id="submit-login-div" class="d-flex flex-row justify-content-end col">
                             <button id="signup-instead" class="btn btn-secondary m-2">Criar Conta</button>
                             <button id="submit-login" type="submit" form="login-form"
                                 class="btn btn-primary m-2">Login</button>
@@ -117,7 +112,7 @@
                             <button id="login-instead" class="btn btn-secondary m-2">Ja tenho conta</button>
                             <button id="signup-submit" type="submit" form="submit-form"
                                 class="btn btn-primary m-2">Cadastrar-se</button>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
 
@@ -133,40 +128,41 @@
     <script>
         var googleUser = {};
         const BASEURL = "http://localhost:5001/hamiltonrios-e760f/us-central1/default"
+        const PRODURL = "https://us-central1-hamiltonrios-e760f.cloudfunctions.net/default"
 
         window.onLoadCallback = function () {
-            // gapi.auth2.init({
-            //     client_id: "972835792340-66vtq5907kuvncep46vk938n6bkjuifv.apps.googleusercontent.com"
-            //     });
             gapi.load('auth2', function () {
-                // Retrieve the singleton for the GoogleAuth library and set up the client.
                 auth2 = gapi.auth2.init({
-                    client_id: "972835792340-81lomg4sb1ggpa31ad87irild3fcnftc.apps.googleusercontent.com",
+                    client_id:"972835792340-3m1k3q9chcsv1vqfjoq3kiplnejt7tpf.apps.googleusercontent.com",
                     cookiepolicy: 'single_host_origin',
-                    // Request scopes in addition to 'profile' and 'email'
-                    //scope: 'additional_scope'
                 });
-                attachSignin(document.getElementById('google-login'));
+                attachSignin( document.getElementById('google-login'));
+
             });
         };
 
         function googleSignOut() {
-                                    var auth2 = gapi.auth2.getAuthInstance();
-                                    auth2.signOut().then(function () {
-                                        console.log('User signed out.');
-                                    });
-                                }
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+                console.log('User signed out.');
+            });
+            }
 
                                
         function attachSignin(element) {
             auth2.attachClickHandler(element, {}, function (googleUser) {
-                $('.g-signin2').innerText = "Signed in as" + googleUser.getBasicProfile().getName();
+                $('#google-login').innerText = "Signed in as" + googleUser.getBasicProfile().getName();
+                
             }, function (error) {
                 console.log(JSON.stringify(error, undefined, 2));
             });
         }
 
         function onSignIn(googleUser) {
+
+            var profile = googleUser.getBasicProfile();
+            var username = profile.getName()
+            localStorage.setItem("username", JSON.stringify(username))
          
             var id_token = googleUser.getAuthResponse().id_token;
             var xhr = new XMLHttpRequest();
@@ -175,13 +171,10 @@
             xhr.onload = function() {
                 if(xhr.responseText == 'success')
                 localStorage.setItem("current-user", id_token);
-                console.log('Signed in as: ' + xhr.responseText);
-                location.assign(BASEURL + '/app')
+                console.log('Signed in as: ' + username );
+                location.assign( PRODURL + '/dashboard' )
             };
             xhr.send(JSON.stringify({token: id_token}));
-
-            var profile = googleUser.getBasicProfile();
-            localStorage.setItem("username", JSON.stringify(profile.getName()))
         }
         document.addEventListener('DOMContentLoaded', function () {
 
@@ -204,14 +197,13 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "localhost:5001" + '/login',
+                    url: PRODURL + '/login',
                     data: this.serialize(),
 
                 })
 
             })
 
-            $('#google-login').on('click', )
         })
     </script>
 

@@ -1,127 +1,208 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Hamilton Rios</title>
 
-    <!--  FIREBASE -->
-    <!-- include only the Firebase features as you need -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hamilton Rios</title>
 
-    <script src="https://apis.google.com/js/platform.js?onload=onLoadCallback" async defer>
-        window.onLoadCallback = function(){
-        gapi.auth2.init({
-            client_id: process.env.OAUTH_CLIENT_ID
-            });
-        }         
-    </script>
+  <!--  GOOGLE -->
+  <meta name="google-signin-client_id"
+    content="972835792340-3m1k3q9chcsv1vqfjoq3kiplnejt7tpf.apps.googleusercontent.com">
+  <script src="https://apis.google.com/js/platform.js?onload=onLoadCallback" async defer></script>
+  <!--  BOOTSTRAP -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
 
-    <!--  BOOTSTRAP -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
+  <!--  JQUERY -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
-    <!--  JQUERY -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
-        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <!--  FONT AWESOME -->
+  <link href="https://hamiltonrios.web.app/assets/css/all.min.css">
 
-    <!--  FONT AWESOME -->
-    <link href="http://localhost:5000/assets/css/all.min.css">
+  <script defer src="https://hamiltonrios.web.app/assets/js/all.min.js"></script>
 
-    <script defer src="http://localhost:5000/assets/js/all.min.js"></script>
+  <!--  PAPER DASHBOARD -->
+  <link href="https://hamiltonrios.web.app/assets/css/animate.min.css" rel="stylesheet">
+  <link href="https://hamiltonrios.web.app/assets/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://hamiltonrios.web.app/assets/css/paper-dashboard.css" rel="stylesheet">
 
-    <!--  PAPER DASHBOARD -->
-    <link href="http://localhost:5000/assets/css/animate.min.css" rel="stylesheet">
-    <link href="http://localhost:5000/assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="http://localhost:5000/assets/css/paper-dashboard.css" rel="stylesheet">
-
-    <!--  CUSTOM CODE -->
-    <link href="http://localhost:5000/assets/css/styles.css" rel="stylesheet">
-    <link src="http://localhost:5000/assets/css/animation.css" rel="stylesheet">
+  <!--  CUSTOM CODE -->
+  <link href="https://hamiltonrios.web.app/assets/css/styles.css" rel="stylesheet">
+  <link src="https://hamiltonrios.web.app/assets/css/animation.css" rel="stylesheet">
 
 
-    <style media="screen">
-        body {
-            background: #ECEFF1;
-            color: rgba(0, 0, 0, 0.87);
-            font-family: Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-    </style>
-  </head>
-  <body>
-    <div class="wrapper">
-      <div class="sidebar">
-        <div class="sidebar-wrapper">
-          <div class="logo">
-              <h2 class="simple-text">Hamilton Rios</h3>
-          </div>
-          <ul class="nav">
-            <li class="active">
-              <a href="./index">
-                <p>Dashboard</p>
-              </a>
-            </li>
-            <li class="">
-              <a href="./fundos">
-                <p>Fundos</p>
-              </a>
-            </li>
-            <li class="">
-              <a href="./embarques">
-                <p>Embarques</p>
-              </a>
-            </li>
-          </ul>
+  <style media="screen">
+    body {
+      background: #ECEFF1;
+      color: rgba(0, 0, 0, 0.87);
+      font-family: Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .riscado {
+      text-decoration: line-through;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="sidebar">
+      <div class="sidebar-wrapper">
+        <div class="logo">
+          <h2 class="simple-text">Hamilton Rios</h3>
         </div>
+        <ul class="nav">
+          <li class="active">
+            <a href="./default/dashboard">
+              <p>Dashboard</p>
+            </a>
+          </li>
+          <li class="">
+            <a href="./default/fundos">
+              <p>Fundos</p>
+            </a>
+          </li>
+          <li class="">
+            <a href="./default/embarques">
+              <p>Embarques</p>
+            </a>
+          </li>
+        </ul>
       </div>
+    </div>
 
-      <div class="main-panel">
-        <nav  class="navbar navbar-default">
-          <div style="display:flex;min-height: 104px;" class="container-fluid">
-            <div style="display:flex;align-self: center;" class="navbar-header">
-              <p class="navbar-brand">DOLAR: <span id='dolar'></span> </p>
+    <div class="main-panel">
+
+      <nav class="navbar navbar-default d-flex justify-content-start">
+        <div style="display:flex;min-height: 109px;" class="justify-content-start flex-fill">
+
+
+          <div class="navbar-header d-flex flex-column flex-fill justify-content-center ">
+            <p class="navbar-brand">
+              DOLAR:
+              
+              <span id='dolar'></span>
+              
+              <button id="sync-dolar"  type='button' class='btn border-input m-1'>
+                <i class="fas fa-sync"></i>
+
+              </button>
+            </p>
+
+              <div id="edit-dolar" class="collapse">
+                <input id='edit-dolar-input' type="text" class='border-input m-2' />
+                <button id='edit-dolar-button' type='button' class='btn border-input m-1 p-1'>
+                  <i class="fas fa-check"></i>
+                </button>
+              </div>
+
+            <small style="margin-left: 1.6rem;" id="dolar-timestamp">timestamp</small>
+          </div>
+
+          <div class='d-flex align-self-center' id="curren-user">
+            <span id="username"></span>
+          </div>
+
+          <button id="logout" onclick="logout()" class="btn btn-danger mx-2">
+            <i class="fas fa-power-off"></i>
+          </button>
+        </div>
+      </nav>
+
+      <div class="content">
+        <div class="container-fluid">
+          <div class="card">
+            <div class="header">
+              <h4 class="title">Timeline</h4>
             </div>
-            <div class="collapse navbar-collapse">
+            <div class="content">
+
 
             </div>
           </div>
-        </nav>
-        <div class="content">
-          <div class="container-fluid">
-            <div class="card">
-              <div class="header">
-                <h4 class="title">Timeline</h4>
-              </div>
-              <div class="content">
-                
+          <div class="card">
+            <div class="header">
+              <h3>Entregas</h3>
+            </div>
+            <div class="content">
+              <p class="riscado">Esqueleto</p>
+              <p>[atual] CRUD Fundos</p>
+              <p>CRUD Embarques</p>
+              <p>Consulta Fundos</p>
+              <p>Consulta Embarques</p>
+              <p>Timeline</p>
+              <p>Spreadsheet import/export</p>
+              <p>Organize tables by date, value... </p>
 
-              </div>
             </div>
-            <div class="card">
-              <div class="header">
-                <h4 class="title">O que falta fazer:</h4>
-              </div>
-              <div class="content">
-                  <h4>Gerar a Timeline</h4>
-                  <h4>Extrair dados em arquivo excel</h4>
-                  <h4>Adcionar dados por arquivo excel</h4>
-                  <h4>Consultar EMBARQUES por numero da fatura.. etc</h4>
-                  <h4>Organizar EMBARQUES por data, valor... </h4>
-                  <h4>Create, Update, Delete functions para os FUNDOS</h4>
-                  <h4>Update, Delete functions para os EMBARQUES</h4>
-              </div>
-            </div>
-            
+
           </div>
         </div>
       </div>
     </div>
 
-    <script src="http://localhost:5000/assets/js/jquery-1.10.2.js" type="text/javascript"></script>
-	  <script src="http://localhost:5000/assets/js/bootstrap.min.js" type="text/javascript"></script>
-    <script src="http://localhost:5000/assets/js/bootstrap-notify.js"></script>
-	  <script src="http://localhost:5000/assets/js/paper-dashboard.js" type="text/javascript"></script>
+    <script src="https://hamiltonrios.web.app/assets/js/jquery-1.10.2.js" type="text/javascript"></script>
+    <script src="https://hamiltonrios.web.app/assets/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="https://hamiltonrios.web.app/assets/js/bootstrap-notify.js"></script>
+    <script src="https://hamiltonrios.web.app/assets/js/paper-dashboard.js" type="text/javascript"></script>
 
-  </body>
+    <script src="https://hamiltonrios.web.app/scripts/constants.js"></script>
+    <script src="https://hamiltonrios.web.app/scripts/edit.js"></script>
+    <script src="http://localhost:5000/scripts/dolar.js"></script>
+
+    <script>
+
+      window.onLoadCallback = function () {
+        //LOAD GOOGLE AUTH
+
+        gapi.load('auth2', function () {
+          // Retrieve the singleton for the GoogleAuth library and set up the client.
+          auth2 = gapi.auth2.init({
+            client_id: "972835792340-81lomg4sb1ggpa31ad87irild3fcnftc.apps.googleusercontent.com",
+            cookiepolicy: 'single_host_origin',
+            // Request scopes in addition to 'profile' and 'email'
+            //scope: 'additional_scope'
+          });
+        });
+      };
+
+
+      function logout() {
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function () {
+          console.log('User signed out.');
+          location.assign(PRODURL + '/login')
+        });
+      }
+
+
+
+      document.addEventListener('DOMContentLoaded', async function () {
+
+        const initialized = await localStorage.getItem('initialized') || false
+
+        if (!initialized) {
+          await getDolarQuote()
+          localStorage.setItem('initialized', true)
+          console.log('app initialized.')
+        }
+
+        const USERNAME = await localStorage.getItem('username') || 'not logged in.'
+        const DOLAR_QUOTE = await localStorage.getItem('dolar_quote') || ''
+        const DOLAR_TIMESTAMP = await localStorage.getItem('dolar_timestamp') || ''
+        
+        
+        bindDolarHtml(DOLAR_QUOTE, DOLAR_TIMESTAMP)
+
+        $("#username").text(USERNAME.replace(/"/g, ""))
+
+
+      })
+    </script>
+</body>
+
 </html>
