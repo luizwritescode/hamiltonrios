@@ -1,0 +1,49 @@
+v
+--------
+[*] Features
+ - 
+ - 
+
+[!] Bugs
+ - 
+ - 
+
+
+
+
+
+
+
+//  TODO  //
+
+ - login bug 
+ - ~dolar manual~
+ - CRUD FUNDOS 
+ - CRUD EMBARQUES
+ - ...
++===============+
+|HRIOS CHANGELOG|
++===============+
+
+(Versao 1 Entrega 0 Build 0)
+
+v1.0.0 
+--------
+[*] Features
+ - Esqueleto
+ - Cdcionar Fundo
+ - Read Fundo
+ - Update Fundo [!]
+ - Deletar Fundo
+
+[!] Bugs
+ - Update ainda adciona fundo novo como mesmo nome
+
+v1.0.1
+-------
+[*] Features
+ - Dolar Manual
+
+[!] Bugs
+ - Dolar por API do Banco Central inconsistente 
+

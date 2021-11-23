@@ -52,22 +52,30 @@
   <div class="wrapper">
     <div class="sidebar">
       <div class="sidebar-wrapper">
+        <!-- 
+        <div id="collapse-sidebar-div" class="container-fluid d-flex flex-row justify-content-end m-2">
+          <button id="collapse-sidebar-btn" class="btn">collapse</button>
+        </div> -->
+
         <div class="logo">
-          <h2 class="simple-text">Hamilton Rios</h3>
+          <h2 id="logo-text" class="simple-text">Hamilton Rios</h2>
         </div>
         <ul class="nav">
           <li class="active">
-            <a href="./default/dashboard">
+            <a class="d-flex flex-row align-items-center " href="./default/dashboard">
+              <i style="font-size: 2.5rem; margin-right: 1rem;" class="fas fa-university m-2 active"></i>
               <p>Dashboard</p>
             </a>
           </li>
           <li class="">
-            <a href="./default/fundos">
+            <a class="d-flex flex-row" href="./default/fundos">
+              <i style="font-size: 2.5rem; margin-right: 1rem;" class="fas fa-piggy-bank"></i>
               <p>Fundos</p>
             </a>
           </li>
           <li class="">
-            <a href="./default/embarques">
+            <a class="d-flex flex-row" href="./default/embarques">
+              <i style="font-size: 2.5rem; margin-right: 1rem;" class="fas fa-shipping-fast"></i>
               <p>Embarques</p>
             </a>
           </li>
@@ -80,6 +88,7 @@
       <nav class="navbar navbar-default d-flex justify-content-start">
         <div style="display:flex;min-height: 109px;" class="justify-content-start flex-fill">
 
+          <button class="navbar-toggler" type="button"><span class="navbar-toggler-bar bar1"></span><span class="navbar-toggler-bar bar2"></span><span class="navbar-toggler-bar bar3"></span></button>
 
           <div class="navbar-header d-flex flex-column flex-fill justify-content-center ">
             <p class="navbar-brand">
@@ -152,7 +161,8 @@
 
     <script src="https://hamiltonrios.web.app/scripts/constants.js"></script>
     <script src="https://hamiltonrios.web.app/scripts/edit.js"></script>
-    <script src="http://localhost:5000/scripts/dolar.js"></script>
+    <script src="https://hamiltonrios.web.app/scripts/dolar.js"></script>
+
 
     <script>
 
@@ -183,18 +193,11 @@
 
       document.addEventListener('DOMContentLoaded', async function () {
 
-        const initialized = await localStorage.getItem('initialized') || false
-
-        if (!initialized) {
-          await getDolarQuote()
-          localStorage.setItem('initialized', true)
-          console.log('app initialized.')
-        }
-
         const USERNAME = await localStorage.getItem('username') || 'not logged in.'
-        const DOLAR_QUOTE = await localStorage.getItem('dolar_quote') || ''
-        const DOLAR_TIMESTAMP = await localStorage.getItem('dolar_timestamp') || ''
+        const DOLAR_QUOTE = await localStorage.getItem('dolar_quote') || 'indefinido'
+        const DOLAR_TIMESTAMP = await localStorage.getItem('dolar_timestamp') || 'clique acima para definir o dolar \nou atualize com o Banco Central'
         
+        await getDolarFromDatabase()
         
         bindDolarHtml(DOLAR_QUOTE, DOLAR_TIMESTAMP)
 

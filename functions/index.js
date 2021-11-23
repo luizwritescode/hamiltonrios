@@ -51,7 +51,7 @@ app.set('views', './views')
 app.set('view engine', 'ejs')
 
 app.use(express.json())
-app.use(bodyParser.urlencoded({extended: false}))
+app.use(express.urlencoded({extended: true}))
 app.use(cookieParser())
 app.use(cors({
     origin: BASEURL,
@@ -136,9 +136,14 @@ app.get('/api/fundos', (req, res) => {
 })
 
 app.post('/api/fundos', (req, res) => {
-    let real = req.body.REAL;
-    let nome = req.body.NOME;
-    let editMode = req.body.editMode;
+
+    let body = JSON.parse(req.body)
+
+    let id = body.ID;
+    let real = body.REAL;
+    let nome = body.NOME;
+    let editMode = body.editMode;
+
 
     console.log(editMode);
 
@@ -149,9 +154,25 @@ app.post('/api/fundos', (req, res) => {
     else 
         editMode = false;
     
-    let obj = {"NOME": nome, "REAL": real}
-
-    db.collection("fundos")
+    let obj = { "NOME": nome, "REAL": real}
+    
+    if(id && editMode)
+    {
+       
+        db.collection("fundos")
+        .doc(id)
+        .set(obj, {merge: editMode} )
+        .then((sent) => {
+            res.status(200).json(sent)
+        })
+        .catch((e) => {
+            res.status(400).json(e)
+        })
+    
+    }
+    else
+    {
+        db.collection("fundos")
         .doc()
         .set(obj, {merge: editMode} )
         .then((sent) => {
@@ -162,13 +183,19 @@ app.post('/api/fundos', (req, res) => {
         .catch((e) => {
             res.status(400).json(e)
         })
+    } 
+
+   
 })
 
-app.get('/api/fundos/delete/:nome', (req, res) => {
 
-    let nome = req.params.nome
+app.delete('/api/fundos/:nome', (req, res) => {
+    let nome = req.params.nome || false
 
-    console.log(nome)
+    if(!nome) {
+        res.status(401).send("ERRO - nenhum nome especificado")
+    }
+
 
     let query = db.collection('fundos').where('NOME', '==', nome)
 
@@ -176,7 +203,8 @@ app.get('/api/fundos/delete/:nome', (req, res) => {
     query.get().then( querySnapshot => {
 
          querySnapshot.forEach ( doc => {
-            deleted.push(doc.ref.path)
+            let path = doc.ref.path
+            deleted.push(path)
             doc.ref.delete()
         })
     })
@@ -185,8 +213,53 @@ app.get('/api/fundos/delete/:nome', (req, res) => {
         res.status(200).json(deleted)
     else 
         res.status(400).send('ERRO INTERNO - nao existe fundo com esse nome')
+})
 
+app.get('/api/vars', (req, res) => {
+    (async () => {
+        try {
+            let query = db.collection('vars')
+            let response = {}
+            await query.get().then( snapshot => {
+                let docs = snapshot.docs
 
+                for (let doc of docs)
+                {
+                    response[doc.id] = doc.data()
+                }
+            })
+
+            return res.status(200).json( response )
+        } 
+        catch(e) {
+            console.log(e)
+            return res.status(500).send(e)
+        }
+
+    })();
+})
+
+app.post('/api/vars', (req, res) => {
+
+    
+    let body = JSON.parse(Object.keys(req.body))
+    
+
+    let key = body.KEY 
+    let value = body.VALUE 
+
+    if (key && value)
+    {
+        db.collection("vars")
+        .doc(key)
+        .set(value, {merge: true})
+        .then((sent => {
+            res.status(200).json(sent)
+        }))
+        .catch((e) => {
+            res.status(500).json(e)
+        })
+    }
 })
 
 app.get('/api/embarques', checkAuth, (req, res) => {
@@ -201,7 +274,7 @@ app.get('/api/embarques', checkAuth, (req, res) => {
                 }
                 return response
             })
-            return res.status(200).send( JSON.stringify(response) )
+            return res.status(200).json( response )
         } catch(e) {
             console.log(e)
             return res.status(500).send(e)
