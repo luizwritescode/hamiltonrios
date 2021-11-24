@@ -70,19 +70,19 @@
         </div>
         <ul class="nav">
           <li class="">
-            <a class="d-flex flex-row align-items-center " href="./default/dashboard">
+            <a class="d-flex flex-row align-items-center " href="/default/dashboard">
               <i style="font-size: 2.5rem; margin-right: 1rem;" class="fas fa-university m-2"></i>
               <p>Dashboard</p>
             </a>
           </li>
           <li class=" active">
-            <a class="d-flex flex-row" href="./default/fundos">
+            <a class="d-flex flex-row" href="/default/fundos">
               <i style="font-size: 2.5rem; margin-right: 1rem;" class="fas fa-piggy-bank active"></i>
               <p>Fundos</p>
             </a>
           </li>
           <li class="">
-            <a class="d-flex flex-row" href="./default/embarques">
+            <a class="d-flex flex-row" href="/default/embarques">
               <i style="font-size: 2.5rem; margin-right: 1rem;" class="fas fa-shipping-fast"></i>
               <p>Embarques</p>
             </a>
@@ -142,7 +142,7 @@
               </div>
 
               <div class="container-fluid d-flex flex-row justify-content-end">
-                <button type="button" onclick="queryDatabase();" class="btn">
+                <button id='refresh-fundos' type="button" class="btn">
                   <i class="fas fa-sync-alt"></i>
                 </button>
               </div>
@@ -285,7 +285,7 @@
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button id='confirm-delete-fundo' type="button" class="btn btn-danger">Quero deletar mesmo assim</button>
+                        <button id='confirm-delete-fundo' type="button" data-dismiss="modal" class="btn btn-danger">Quero deletar mesmo assim</button>
                       </div>
                     </div>
                   </div>
@@ -300,10 +300,13 @@
   <script src="https://hamiltonrios.web.app/scripts/edit.js"></script>
   <script src="https://hamiltonrios.web.app/scripts/dolar.js"></script>
 
+  <!-- <script src="http://localhost:5000/scripts/dolar.js"></script> -->
+  
   <script>
     const URL_FUNDOS = "https://us-central1-hamiltonrios-e760f.cloudfunctions.net/default/api/fundos"
     const URL_FUNDOS_ = "http://localhost:5001/hamiltonrios-e760f/us-central1/default/api/fundos"
     const BASEURL = "https://us-central1-hamiltonrios-e760f.cloudfunctions.net/default"
+    const BASEURL_ = "http://localhost:5001/hamiltonrios-e760f/us-central1/default"
 
 
     // LOAD GOOGLE AUTH
@@ -368,6 +371,7 @@
         },
         success:  function(data) {
           console.log(data)
+          queryDatabase()
         },
         error: function(error) {
           console.log(error)
@@ -397,13 +401,24 @@
     
     async function loadFundos(data, status, xhr) {
 
-      await getDolarFromDatabase();
+      let dolar_set = localStorage.getItem("dolar_set")
+      
+      if(!dolar_set)
+        await getDolarFromDatabase();
+
       let dolar_timestamp = localStorage.getItem("dolar_timestamp")
       let dolar_quote = localStorage.getItem("dolar_quote")
+
       $("#dolar").text(dolar_quote)
       $("#dolar-timestamp").text(dolar_timestamp)
-
+      
       var total = 0
+
+      if(Object.keys(data).length < 1)
+        {
+
+         $("#fundos").append( $('<div>').text('Nenhum fundo aqui').addClass('d-flex m-3 ') )
+        }
 
       Object.values(data).map( (fundo, i ) => {
         let td = document.createElement('td')
@@ -413,7 +428,6 @@
         valor_dolar = parseFloat(valor_real * 1 / dolar_quote).toFixed(2)
         total = parseFloat(total) + parseFloat(valor_real)
 
-        console.log(typeof(total))
         
         var $tr = $('<tr>').append(
           $('<td>').text(fundo.NOME),
@@ -496,11 +510,12 @@
         $("#new-fund-card").append('<div class="help-block">' + errors.NOME + "</div>");
         noerror = false
       }
-      if (data.REAL == undefined || data.REAL.length === 0) {
+      if (data.REAL == undefined || data.REAL.length === 0 || !parseFloat(data.REAL))  {
         $("#new-value").addClass("has-error");
         $("#new-funds-card").append('<div class="help-block">' + errors.REAL + "</div>");
         noerror = false
       }
+    
 
       if (noerror) {
         console.log(data);
@@ -513,15 +528,20 @@
           xhrFields: {
             withCredentials: true
           },
-          success: () => $("new-funds-card").append('<div class="help-block">' + success + "</div>")
+          success: () =>  {
+            queryDatabase()
+            $("new-funds-card").append('<div class="help-block">' + success + "</div>")
+          }
         })
-
-        queryDatabase()
       }
+      else
+      {
+        $("new-funds-card").append('<div class="help-block">' + success + "</div>")
+      }      
       event.preventDefault();
-    }
+}
 
-    function submitEditFundo(event) {
+    async function submitEditFundo(event) {
       let noerror = true
       var data = {
         editMode: true
@@ -549,28 +569,27 @@
         noerror = false
       }
 
-      if(storage)
-      {
-        Object.keys(storage["fundos"]).map( (id) => {
-          if( storage["fundos"][id]["NOME"] === data.NOME )
+      let fundos = await localStorage.getItem('fundos')
+
+       Object.keys(fundos).map( (id) => {
+          if( fundos[id].NOME === data.NOME )
           {
-              data["ID"] = id
+              data.ID = id
           }})
-      }
 
       if (noerror) {
         console.log(data);
         $.ajax({
           type: 'POST',
           url: URL_FUNDOS,
-          data: data,
+          data: JSON.stringify(data),
           dataType: "json",
           enconde: true,
           xhrFields: {
             withCredentials: true
           },
           success: () => {
-            location.reload()
+        
             queryDatabase()
             $("new-funds-card").append('<div class="help-block">' + success + "</div>")
           }
@@ -614,6 +633,7 @@
         sidebarOpen = !sidebarOpen
       })
 
+      $("#refresh-fundos").on("click", (event) => queryDatabase())
 
       $(".edit-fund").on("click", (event) => {
         editMode = true
@@ -629,10 +649,8 @@
       $("#confirm-edit-fundo").on("click", (event) => submitEditFundo(event))
       $('#confirm-delete-fundo').on("click", (event) => {
 
-      let nome = $("#delete-fund-name").text()
-      console.log(nome)
-       deleteFundo(nome)
-
+        let nome = $("#delete-fund-name").text()
+        deleteFundo(nome)
       })
     }
 

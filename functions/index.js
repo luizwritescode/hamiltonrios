@@ -137,8 +137,9 @@ app.get('/api/fundos', (req, res) => {
 
 app.post('/api/fundos', (req, res) => {
 
-    let body = JSON.parse(req.body)
-
+    let body = JSON.parse(Object.keys(req.body))
+    console.log(body);
+    
     let id = body.ID;
     let real = body.REAL;
     let nome = body.NOME;
@@ -200,19 +201,20 @@ app.delete('/api/fundos/:nome', (req, res) => {
     let query = db.collection('fundos').where('NOME', '==', nome)
 
     let deleted = []
-    query.get().then( querySnapshot => {
+    query.get()
+    .then( querySnapshot => {
 
          querySnapshot.forEach ( doc => {
             let path = doc.ref.path
             deleted.push(path)
             doc.ref.delete()
         })
+        if (deleted.length > 0)
+            res.status(200).json(deleted)
     })
-    
-    if (deleted.length > 0)
-        res.status(200).json(deleted)
-    else 
+    .catch( () =>
         res.status(400).send('ERRO INTERNO - nao existe fundo com esse nome')
+    ) 
 })
 
 app.get('/api/vars', (req, res) => {

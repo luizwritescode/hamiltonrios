@@ -1,18 +1,3 @@
-v
---------
-[*] Features
- - 
- - 
-
-[!] Bugs
- - 
- - 
-
-
-
-
-
-
 
 //  TODO  //
 
@@ -21,6 +6,12 @@ v
  - CRUD FUNDOS 
  - CRUD EMBARQUES
  - ...
+
+
+ [!] Bugs
+ - Update ainda adciona fundo novo como mesmo nome
+ - Dolar por API do Banco Central inconsistente 
+
 +===============+
 |HRIOS CHANGELOG|
 +===============+
@@ -36,8 +27,7 @@ v1.0.0
  - Update Fundo [!]
  - Deletar Fundo
 
-[!] Bugs
- - Update ainda adciona fundo novo como mesmo nome
+
 
 v1.0.1
 -------
@@ -45,5 +35,33 @@ v1.0.1
  - Dolar Manual
 
 [!] Bugs
- - Dolar por API do Banco Central inconsistente 
 
+
+v1.0.2
+-------
+[!] Bug Fix
+ - Create, Delete fundos atualizam o banco de dados e dolar automaticamente
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+v
+-------
+[*] Features
+ - 
+ - 
+
+[!] Bugs
+ - 
+ - 

@@ -62,19 +62,19 @@
         </div>
         <ul class="nav">
           <li class="active">
-            <a class="d-flex flex-row align-items-center " href="./default/dashboard">
+            <a class="d-flex flex-row align-items-center " href="/default/dashboard">
               <i style="font-size: 2.5rem; margin-right: 1rem;" class="fas fa-university m-2 active"></i>
               <p>Dashboard</p>
             </a>
           </li>
           <li class="">
-            <a class="d-flex flex-row" href="./default/fundos">
+            <a class="d-flex flex-row" href="/default/fundos">
               <i style="font-size: 2.5rem; margin-right: 1rem;" class="fas fa-piggy-bank"></i>
               <p>Fundos</p>
             </a>
           </li>
           <li class="">
-            <a class="d-flex flex-row" href="./default/embarques">
+            <a class="d-flex flex-row" href="/default/embarques">
               <i style="font-size: 2.5rem; margin-right: 1rem;" class="fas fa-shipping-fast"></i>
               <p>Embarques</p>
             </a>
@@ -196,6 +196,7 @@
         const USERNAME = await localStorage.getItem('username') || 'not logged in.'
         const DOLAR_QUOTE = await localStorage.getItem('dolar_quote') || 'indefinido'
         const DOLAR_TIMESTAMP = await localStorage.getItem('dolar_timestamp') || 'clique acima para definir o dolar \nou atualize com o Banco Central'
+        const DOLAR_SET = await localStorage.setItem('dolar_set', false)
         
         await getDolarFromDatabase()
         

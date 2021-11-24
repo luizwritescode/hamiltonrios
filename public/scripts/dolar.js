@@ -1,4 +1,7 @@
 
+const URL_VARS = 'https://us-central1-hamiltonrios-e760f.cloudfunctions.net/default/api/vars'
+const URL_VARS_ = 'http://localhost:5001/hamiltonrios-e760f/us-central1/default/api/vars'
+
 async function getDolarFromDatabase() {
     let URL = 'https://us-central1-hamiltonrios-e760f.cloudfunctions.net/default/api/vars'
     console.log("searching database for dolar data ...")
@@ -7,11 +10,14 @@ async function getDolarFromDatabase() {
     $("#dolar-timestamp").text("procurando valor do dolar no banco de dados")
     $.ajax({
         type:"GET",
-        url: URL,
+        url: URL_VARS,
         xhrFields: {
             withCredentials: true,
         },
         success: function (data) {
+
+            if(Object.keys(data).length > 0) {
+
 
             console.log("dolar data retrieved from database successfuly.")
             console.log(data)
@@ -21,6 +27,7 @@ async function getDolarFromDatabase() {
 
             localStorage.setItem("dolar_quote", quote )
             localStorage.setItem("dolar_timestamp", timestamp )
+            localStorage.setItem("dolar_set", true)
 
             let from = new Date(parseInt(timestamp))
         
@@ -34,6 +41,11 @@ async function getDolarFromDatabase() {
             $("#dolar-timestamp").text(str)
 
             return data
+            }
+
+            console.log('Empty data object');
+            
+
         },
         error: function (err) {
 
@@ -113,7 +125,7 @@ async function bindDolarHtml(dq, dt) {
 
 
 async function saveCustomDolarQuote(value) {
-
+    
     value = parseFloat(value)
 
     if( value )
@@ -137,10 +149,9 @@ async function saveCustomDolarQuote(value) {
             }
         }
 
-        let URL = 'https://us-central1-hamiltonrios-e760f.cloudfunctions.net/default/api/vars'
         console.log(obj);
         $.ajax({
-            url: URL,
+            url: URL_VARS,
             type: "POST",
             data: JSON.stringify(obj),
             dataType: "application/json",
