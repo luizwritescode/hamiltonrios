@@ -1,3 +1,7 @@
+.collapse {
+    display: none;
+}
+
 body {
     font-family: 'Raleway', sans-serif;
 }

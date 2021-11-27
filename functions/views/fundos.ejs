@@ -243,7 +243,7 @@
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Editar fundo</h5>
+                        <h5 class="modal-title" id="editFundoModalLabel">Editar fundo</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
@@ -256,6 +256,8 @@
 
                             <label for="edit-fund-value">Insira o novo valor para o fundo:</label>
                             <input id="edit-fund-value" type="text" name="edit-fund-value" placeholder="R$ 0,00" class='form-control border-input m-2'>
+                            
+                            <input id="edit-fund-id" type="text" name="edit-fund-value" style="display: none;">
                             
                           </form>
                       </div>
@@ -273,14 +275,16 @@
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Deletar fundo</h5>
+                        <h5 class="modal-title" id="deleteFundoModalLabel">Deletar fundo</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
                       </div>
                       <div id='delete-body' class="modal-body delete-body">
                         
-      
+                        <div id='delete-info'></div>
+
+                        <input id="delete-fund-id" type="text" style="display: none;">
 
                       </div>
                       <div class="modal-footer">
@@ -296,17 +300,16 @@
   <script src="https://hamiltonrios.web.app/assets/js/bootstrap-notify.js"></script>
   <script src="https://hamiltonrios.web.app/assets/js/paper-dashboard.js" type="text/javascript"></script>
 
-  <script src="https://hamiltonrios.web.app/scripts/constants.js"></script>
   <script src="https://hamiltonrios.web.app/scripts/edit.js"></script>
+  <script src="https://hamiltonrios.web.app/scripts/constants.js"></script>
   <script src="https://hamiltonrios.web.app/scripts/dolar.js"></script>
 
-  <!-- <script src="http://localhost:5000/scripts/dolar.js"></script> -->
+
+  <!-- <script src="http://localhost:5000/scripts/edit.js"></script>
+  <script src="http://localhost:5000/scripts/dolar.js"></script>
+  <script src="http://localhost:5000/scripts/constants.js"></script> -->
   
   <script>
-    const URL_FUNDOS = "https://us-central1-hamiltonrios-e760f.cloudfunctions.net/default/api/fundos"
-    const URL_FUNDOS_ = "http://localhost:5001/hamiltonrios-e760f/us-central1/default/api/fundos"
-    const BASEURL = "https://us-central1-hamiltonrios-e760f.cloudfunctions.net/default"
-    const BASEURL_ = "http://localhost:5001/hamiltonrios-e760f/us-central1/default"
 
 
     // LOAD GOOGLE AUTH
@@ -322,50 +325,19 @@
       })
     }
     
-   
 
-    function parseCurrency(val) {
 
-      if(typeof(val) !="string")
-        val = val.toString()
-      
-      let p = 0
-      while(val[p] == '0') {
-        val = val.substring(p+1, val.length)
-        p++
-      }
-
-      let count = 0
-      let decimal = val.split(".")[1] || "";
-      val = val.split(".")[0].toString()
-      for (var i = val.length - 1; i > 0; i--) {
-        count++
-        if (count >= 3) {
-          val = val.substring(0, i) + ',' + val.substring(i, val.length)
-          count = 0
-        }
-      }
-      val = "$ " + val + "." + decimal
-      return val
+    function modalDeleteFundo(id, nome) {
+      $("#delete-info").html(`<p>Tem certeza que quer deletar o fundo <span id='delete-fund-name'>${nome}</span> ?</p>`)
+      $("#delete-fund-id").val(id)
     }
+    function deleteFundo(id) {
 
-    function cleanTable() {
-      $("tbody").html("")
-    }
-
-    function cleanDolarDisplay() {
-      $("#dolar").html(" carregando...")
-      $("#dolar-timestamp").html("--")
-    }
-
-    function modalDeleteFundo(nome) {
-      $("#delete-body").html(`<p>Tem certeza que quer deletar o fundo <span id='delete-fund-name'>${nome}</span> ?</p>`)
-    }
-    function deleteFundo(nome) {
+      console.log(id)
 
       $.ajax({
         type:'DELETE',
-        url: BASEURL + '/api/fundos/' + nome,
+        url: BASEURL + '/api/fundos/' + id.toString(),
         xhrFields: {
           withCredentials: true
         },
@@ -377,8 +349,6 @@
           console.log(error)
         }
         })
-
-        queryDatabase()
       }
       
     async function queryDatabase() {
@@ -386,7 +356,7 @@
 
       $.ajax({
         type: 'GET',
-        url: URL_FUNDOS,
+        url: FUNDOS_URL,
         xhrFields: {
           withCredentials: true
         },
@@ -402,16 +372,12 @@
     async function loadFundos(data, status, xhr) {
 
       let dolar_set = localStorage.getItem("dolar_set")
-      
+
       if(!dolar_set)
         await getDolarFromDatabase();
 
       let dolar_timestamp = localStorage.getItem("dolar_timestamp")
       let dolar_quote = localStorage.getItem("dolar_quote")
-
-      $("#dolar").text(dolar_quote)
-      $("#dolar-timestamp").text(dolar_timestamp)
-      
       var total = 0
 
       if(Object.keys(data).length < 1)
@@ -420,16 +386,16 @@
          $("#fundos").append( $('<div>').text('Nenhum fundo aqui').addClass('d-flex m-3 ') )
         }
 
-      Object.values(data).map( (fundo, i ) => {
+      Object.entries(data).map( (fundo_arr, i ) => {
         let td = document.createElement('td')
         
-        
+        let fundo = fundo_arr[1]
         valor_real = parseFloat(fundo.REAL).toFixed(2)
         valor_dolar = parseFloat(valor_real * 1 / dolar_quote).toFixed(2)
         total = parseFloat(total) + parseFloat(valor_real)
 
         
-        var $tr = $('<tr>').append(
+        var $tr = $(`<tr class=${fundo_arr[0]}>`).append(
           $('<td>').text(fundo.NOME),
           $('<td>').text("R"+parseCurrency(valor_real)),
           $('<td>').text(parseCurrency(valor_dolar)),
@@ -440,7 +406,7 @@
                 "data-toggle": "modal",
                 "data-target": "#edit-fund-modal"
               })
-              .on('click', (event) => editFundo(event, fundo.NOME, fundo.REAL) )
+              .on('click', (event) => editFundo(event, fundo.NOME, fundo.REAL, fundo_arr[0]) )
               .addClass('btn btn-primary-outline mx-1 edit-fund e'+i)
               .append(
                 $('<i>').addClass('fas fa-edit').attr("style", "color:#666;")
@@ -451,7 +417,7 @@
                 "data-target": "#delete-fund-modal",
                 "style": "color:#DD0000"
               })
-              .on('click', (event) => modalDeleteFundo(fundo.NOME))
+              .on('click', (event) => modalDeleteFundo(fundo_arr[0], fundo.NOME))
               .addClass('btn danger mx-1 delete-fund d'+i)
               .append(
                 $('<i>').addClass('fas fa-times').attr("style", "color:#DD0000;")
@@ -469,25 +435,7 @@
       localStorage.setItem('fundos', JSON.stringify(data))
     }
 
-    async function postNewFund(data) {
-
-      $.ajax({
-        type: "POST",
-        url: URL_FUNDOS,
-        data: JSON.stringify(data),
-        contentType: "json",
-        dataType: "application/json",
-        success: function (d) {
-          console.log(d)
-        },
-        error: function (e) {
-          console.log(e)
-        },
-
-      })
-    }
-
-    function submitFundo(event) {
+    async function submitFundo(event) {
       let noerror = true
       var data = {
         editMode: false
@@ -500,8 +448,8 @@
       var success = 'Banco de dados atualizado com sucesso!'
 
       data = {
-        NOME: $("#new-fundo").val(),
-        REAL: $("#new-value").val()
+        "NOME": $("#new-fundo").val(),
+        "REAL": $("#new-value").val()
       }
       console.log($("#change-value").val());
 
@@ -521,8 +469,8 @@
         console.log(data);
         $.ajax({
           type: 'POST',
-          url: URL_FUNDOS,
-          data: JSON.stringify(data),
+          url: FUNDOS_URL,
+          data: data,
           dataType: "json",
           enconde: true,
           xhrFields: {
@@ -542,10 +490,10 @@
 }
 
     async function submitEditFundo(event) {
+        console.log(event.target)
       let noerror = true
-      var data = {
-        editMode: true
-      }
+      var data = {}
+
       var errors = {
         NOME: "Insira um nome para o fundo",
         REAL: "Insira um valor para o fundo",
@@ -571,19 +519,15 @@
 
       let fundos = await localStorage.getItem('fundos')
 
-       Object.keys(fundos).map( (id) => {
-          if( fundos[id].NOME === data.NOME )
-          {
-              data.ID = id
-          }})
+      let id = $('#edit-fund-id').val()
 
       if (noerror) {
         console.log(data);
         $.ajax({
           type: 'POST',
-          url: URL_FUNDOS,
+          url: FUNDOS_URL + '/' + id,
           data: JSON.stringify(data),
-          dataType: "json",
+          dataType: "text",
           enconde: true,
           xhrFields: {
             withCredentials: true
@@ -601,9 +545,10 @@
 
     }
 
-    function editFundo(event, nome, real) {
+    function editFundo(event, nome, real, id) {
       $('#edit-fund-name').val(nome)
       $('#edit-fund-value').val(real)
+      $('#edit-fund-id').val(id)
 
     }
 
@@ -635,22 +580,13 @@
 
       $("#refresh-fundos").on("click", (event) => queryDatabase())
 
-      $(".edit-fund").on("click", (event) => {
-        editMode = true
-        console.log(event)
-      })
-      
-      $(".delete-fund").on("click", (event) => {
-        
-        console.log(event)
-      })
-
       $("#confirm-fundo").on("click", (event) => submitFundo(event))
       $("#confirm-edit-fundo").on("click", (event) => submitEditFundo(event))
       $('#confirm-delete-fundo').on("click", (event) => {
 
-        let nome = $("#delete-fund-name").text()
-        deleteFundo(nome)
+        let id = $("#delete-fund-id").val()
+
+        deleteFundo(id)
       })
     }
 
@@ -660,7 +596,7 @@
       bindjs()
       bindDolarHtml(DOLAR_QUOTE, DOLAR_TIMESTAMP)
 
-      if ( !storage.hasOwnProperty("fundos") ) {
+      if ( storage ) {
         loadFundos(storage)
       } else {
         queryDatabase()

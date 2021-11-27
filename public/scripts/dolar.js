@@ -1,7 +1,3 @@
-
-const URL_VARS = 'https://us-central1-hamiltonrios-e760f.cloudfunctions.net/default/api/vars'
-const URL_VARS_ = 'http://localhost:5001/hamiltonrios-e760f/us-central1/default/api/vars'
-
 async function getDolarFromDatabase() {
     let URL = 'https://us-central1-hamiltonrios-e760f.cloudfunctions.net/default/api/vars'
     console.log("searching database for dolar data ...")
@@ -10,7 +6,7 @@ async function getDolarFromDatabase() {
     $("#dolar-timestamp").text("procurando valor do dolar no banco de dados")
     $.ajax({
         type:"GET",
-        url: URL_VARS,
+        url: VARS_URL,
         xhrFields: {
             withCredentials: true,
         },
@@ -29,16 +25,8 @@ async function getDolarFromDatabase() {
             localStorage.setItem("dolar_timestamp", timestamp )
             localStorage.setItem("dolar_set", true)
 
-            let from = new Date(parseInt(timestamp))
-        
-            let hours = from.getHours()
-            let minutes = from.getMinutes() < 10 ? "0" + from.getMinutes() : from.getMinutes()
-            let date = from.getDate()
-            let month = from.getMonth() + 1
-            let str = `Desde ${date}/${month} @ ${hours}:${minutes} `
-
             $("#dolar").text(quote)
-            $("#dolar-timestamp").text(str)
+            $("#dolar-timestamp").text( parseDate(timestamp))
 
             return data
             }
@@ -59,6 +47,8 @@ async function getDolarFromDatabase() {
 async function getDolarQuote() {
     console.log('updating USD quote...')
 
+
+    
     let now = new Date()
     let today = `${now.getMonth()}-${now.getDate()}-${now.getFullYear()}`
 
@@ -96,7 +86,7 @@ async function getDolarQuote() {
 async function bindDolarHtml(dq, dt) {
 
     $("#dolar").text(dq)
-    $("#dolar-timestamp").text(dt)
+    $("#dolar-timestamp").text( parseDate(dt) )
 
 
     $('#dolar').on('click', function (event) {
@@ -131,15 +121,9 @@ async function saveCustomDolarQuote(value) {
     if( value )
     {
         let tmstmp = Date.now()
-        let now = new Date( tmstmp )
-        let hours = now.getHours()
-        let minutes = now.getMinutes() < 10 ? "0" + now.getMinutes() : now.getMinutes()
-        let date = now.getDate()
-        let month = now.getMonth() + 1
-        let str = `custom data set @ ${hours}:${minutes} - ${date} ${month} `
 
         localStorage.setItem('dolar_quote', value)
-        localStorage.setItem('dolar_timestamp', str )
+        localStorage.setItem('dolar_timestamp', tmstmp )
 
         obj = {
             "KEY": "DOLAR",
@@ -151,10 +135,10 @@ async function saveCustomDolarQuote(value) {
 
         console.log(obj);
         $.ajax({
-            url: URL_VARS,
+            url: VARS_URL,
             type: "POST",
-            data: JSON.stringify(obj),
-            dataType: "application/json",
+            data: obj,
+            dataType: "json",
             encode: true,
             xhrFields: {
                 withCredentials: true
@@ -163,8 +147,9 @@ async function saveCustomDolarQuote(value) {
                 console.log("custom dolar data saved successfuly.")
                 console.log(sent)
                 
+                localStorage.setItem('dolar_set', true)
                 $("#dolar").text(value)
-                $("#dolar-timestamp").text(str)
+                $("#dolar-timestamp").text( parseDate(tmstmp) )
                 
             },
             error: (e) => {
@@ -179,3 +164,40 @@ async function saveCustomDolarQuote(value) {
     }
 
 }
+
+
+function parseDate(timestamp)
+{
+    let from = new Date(parseInt(timestamp))
+        
+    let hours = from.getHours()
+    let minutes = from.getMinutes() < 10 ? "0" + from.getMinutes() : from.getMinutes()
+    let date = from.getDate()
+    let month = from.getMonth() + 1
+    return `Desde ${date}/${month} @ ${hours}:${minutes} `
+}
+
+function parseCurrency(val) {
+
+    if(typeof(val) !="string")
+      val = val.toString()
+    
+    let p = 0
+    while(val[p] == '0') {
+      val = val.substring(p+1, val.length)
+      p++
+    }
+
+    let count = 0
+    let decimal = val.split(".")[1] || "";
+    val = val.split(".")[0].toString()
+    for (var i = val.length - 1; i > 0; i--) {
+      count++
+      if (count >= 3) {
+        val = val.substring(0, i) + ',' + val.substring(i, val.length)
+        count = 0
+      }
+    }
+    val = "$ " + val + "." + decimal
+    return val
+  }

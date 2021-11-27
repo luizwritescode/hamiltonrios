@@ -58,7 +58,8 @@ app.use(cors({
     credentials: true,
 }))
 
-app.use(favicon('./public/images/favicon.ico'))
+app.use('/favicon.ico', express.static('/public/images/favicon.ico'))
+app.use(express.static('public'))
 
 //app.use('/', checkAuth )
 
@@ -137,42 +138,17 @@ app.get('/api/fundos', (req, res) => {
 
 app.post('/api/fundos', (req, res) => {
 
-    let body = JSON.parse(Object.keys(req.body))
+    let body = req.body
     console.log(body);
     
     let id = body.ID;
     let real = body.REAL;
     let nome = body.NOME;
-    let editMode = body.editMode;
-
-
-    console.log(editMode);
-
-    if(editMode === "true")
-        editMode = true;
-    else if (editMode === "false")
-        editMode = false;
-    else 
-        editMode = false;
+    let editMode = false
     
     let obj = { "NOME": nome, "REAL": real}
     
-    if(id && editMode)
-    {
-       
-        db.collection("fundos")
-        .doc(id)
-        .set(obj, {merge: editMode} )
-        .then((sent) => {
-            res.status(200).json(sent)
-        })
-        .catch((e) => {
-            res.status(400).json(e)
-        })
-    
-    }
-    else
-    {
+ 
         db.collection("fundos")
         .doc()
         .set(obj, {merge: editMode} )
@@ -184,34 +160,50 @@ app.post('/api/fundos', (req, res) => {
         .catch((e) => {
             res.status(400).json(e)
         })
-    } 
+    
 
    
 })
 
+app.post('/api/fundos/:id', (req,res) => {
+    
+    console.log(req.body)
 
-app.delete('/api/fundos/:nome', (req, res) => {
-    let nome = req.params.nome || false
+    let body = JSON.parse( Object.keys(req.body) )
 
-    if(!nome) {
+    let nome = body.NOME
+    let real = body.REAL
+
+    let id = req.params.id
+
+    let obj = { "NOME": nome, "REAL": real}
+
+    db.collection("fundos")
+    .doc(id)
+    .set(obj, {merge: true} )
+    .then((sent) => {
+        res.status(200).json(sent)
+    })
+    .catch((e) => {
+        res.status(400).json(e)
+    })
+})
+
+app.delete('/api/fundos/:id', (req, res) => {
+    let id = req.params.id || false
+
+    if(!id) {
         res.status(401).send("ERRO - nenhum nome especificado")
     }
 
-
-    let query = db.collection('fundos').where('NOME', '==', nome)
-
     let deleted = []
-    query.get()
-    .then( querySnapshot => {
-
-         querySnapshot.forEach ( doc => {
-            let path = doc.ref.path
-            deleted.push(path)
-            doc.ref.delete()
-        })
-        if (deleted.length > 0)
-            res.status(200).json(deleted)
-    })
+    db.collection('fundos')
+    .doc(id)
+    .delete()
+    .then( sent => {
+    
+            res.status(200).json(sent)
+     })
     .catch( () =>
         res.status(400).send('ERRO INTERNO - nao existe fundo com esse nome')
     ) 
@@ -244,8 +236,9 @@ app.get('/api/vars', (req, res) => {
 app.post('/api/vars', (req, res) => {
 
     
-    let body = JSON.parse(Object.keys(req.body))
+    let body = req.body
     
+    console.log(body)
 
     let key = body.KEY 
     let value = body.VALUE 
@@ -264,24 +257,73 @@ app.post('/api/vars', (req, res) => {
     }
 })
 
-app.get('/api/embarques', checkAuth, (req, res) => {
+app.get('/api/embarques', (req, res) => {
     (async () => {
         try { 
             let query = db.collection('embarques')
-            let response = []
+            let response = {}
             await query.get().then( snapshot => {
                 let docs = snapshot.docs
                 for ( let doc of docs ) {
-                    response.push(doc.data())
+                    response[doc.id] = doc.data()
                 }
                 return response
             })
-            return res.status(200).json( response )
+            return res.status(200).send( JSON.stringify(response) )
         } catch(e) {
             console.log(e)
             return res.status(500).send(e)
         }
     })();
+})
+
+app.post('/api/embarques', (req, res) => {
+
+    let body = req.body
+    
+    console.log(body);
+    let editMode = false
+    
+    let obj = { "numFatura": body.numFatura, "nomeCliente": body.nomeCliente, "data": body.data, "diasParaPagar": body.diasParaPagar, "REAL": body.REAL }
+    
+ 
+        db.collection("embarques")
+        .doc()
+        .set(obj, {merge: editMode} )
+        .then((sent) => {
+
+
+            res.status(200).json(sent)
+        })
+        .catch((e) => {
+            res.status(400).json(e)
+        })
+    
+
+   
+})
+
+
+app.delete('/api/embarques/:id', (req, res) => {
+
+    let id = req.params.id|| false
+
+    if(!id) {
+        res.status(401).send("ERRO - nenhum id especificado")
+    }
+
+    let deleted = []
+    db.collection('embarques')
+    .doc(id)
+    .delete()
+    .then( sent => {
+
+            deleted.push(sent)
+            res.status(200).json(deleted)
+    })
+    .catch( () =>
+        res.status(400).send('ERRO INTERNO - nao existe embarque com esse id')
+    ) 
 })
 
 

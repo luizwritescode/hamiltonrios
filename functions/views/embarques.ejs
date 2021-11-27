@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hamilton Rios</title>
+
+    <!--  GOOGLE -->
+    <meta name="google-signin-client_id"
+        content="972835792340-3m1k3q9chcsv1vqfjoq3kiplnejt7tpf.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js?onload=onLoadCallback" async defer></script>
+    <!--  BOOTSTRAP -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
+
+    <!--  JQUERY -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <!--  FONT AWESOME -->
+    <link href="https://hamiltonrios.web.app/assets/css/all.min.css">
+
+    <script defer src="https://hamiltonrios.web.app/assets/js/all.min.js"></script>
+
+    <!--  PAPER DASHBOARD -->
+    <link href="https://hamiltonrios.web.app/assets/css/animate.min.css" rel="stylesheet">
+    <link href="https://hamiltonrios.web.app/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://hamiltonrios.web.app/assets/css/paper-dashboard.css" rel="stylesheet">
+
+    <!--  CUSTOM CODE -->
+    <link href="https://hamiltonrios.web.app/assets/css/styles.css" rel="stylesheet">
+    <link src="https://hamiltonrios.web.app/assets/css/animation.css" rel="stylesheet">
+
+
+    <style media="screen">
+        body {
+            background: #ECEFF1;
+            color: rgba(0, 0, 0, 0.87);
+            font-family: Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .riscado {
+            text-decoration: line-through;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+
+        <div class="sidebar">
+            <div class="sidebar-wrapper">
+                <!-- 
+        <div id="collapse-sidebar-div" class="container-fluid d-flex flex-row justify-content-end m-2">
+          <button id="collapse-sidebar-btn" class="btn">collapse</button>
+        </div> -->
+
+                <div class="logo">
+                    <h2 id="logo-text" class="simple-text">Hamilton Rios</h2>
+                </div>
+                <ul class="nav">
+                    <li class="">
+                        <a class="d-flex flex-row align-items-center " href="/default/dashboard">
+                            <i style="font-size: 2.5rem; margin-right: 1rem;" class="fas fa-university m-2"></i>
+                            <p>Dashboard</p>
+                        </a>
+                    </li>
+                    <li class="">
+                        <a class="d-flex flex-row" href="/default/fundos">
+                            <i style="font-size: 2.5rem; margin-right: 1rem;" class="fas fa-piggy-bank"></i>
+                            <p>Fundos</p>
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a class="d-flex flex-row" href="/default/embarques">
+                            <i style="font-size: 2.5rem; margin-right: 1rem;" class="fas fa-shipping-fast active"></i>
+                            <p>Embarques</p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="main-panel">
+
+            <nav class="navbar navbar-default d-flex justify-content-start">
+                <div style="display:flex;min-height: 109px;" class="justify-content-start flex-fill">
+
+                    <button class="navbar-toggler" type="button"><span class="navbar-toggler-bar bar1"></span><span
+                            class="navbar-toggler-bar bar2"></span><span
+                            class="navbar-toggler-bar bar3"></span></button>
+
+                    <div class="navbar-header d-flex flex-column flex-fill justify-content-center ">
+                        <p class="navbar-brand">
+                            DOLAR:
+
+                            <span id='dolar'></span>
+
+                            <button id="sync-dolar" type='button' class='btn border-input m-1'>
+                                <i class="fas fa-sync"></i>
+
+                            </button>
+                        </p>
+
+                        <div id="edit-dolar" class="collapse">
+                            <input id='edit-dolar-input' type="text" class='border-input m-2' />
+                            <button id='edit-dolar-button' type='button' class='btn border-input m-1 p-1'>
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </div>
+
+                        <small style="margin-left: 1.6rem;" id="dolar-timestamp">timestamp</small>
+                    </div>
+
+                    <div class='d-flex align-self-center' id="curren-user">
+                        <span id="username"></span>
+                    </div>
+
+                    <button id="logout" onclick="logout()" class="btn btn-danger mx-2">
+                        <i class="fas fa-power-off"></i>
+                    </button>
+                </div>
+            </nav>
+
+            <div class="content">
+                <div class="container-fluid">
+
+
+                    <div class="card">
+                        <div class="card-header d-flex flex-row align-items-center">
+                            <div class="d-flex">
+                                <h3 style='color:#666' class="card-title">Embarques</h3>
+                            </div>
+
+                            <div class="container-fluid d-flex flex-row justify-content-end">
+                                <button id='sync-embarques' type="button" class="btn">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+
+                        </div>
+                        <div style="padding: 0!important;" class="card-body">
+                            <table class='table table-striped table-hover'>
+                                <thead>
+                                    <tr>
+                                        <th class='head-primary'>
+                                            Numero da Fatura
+                                        </th>
+                                        <th class='head-primary'>
+                                            Nome do Cliente
+                                        </th>
+                                        <th class='head-primary'>
+                                            Data de Envio
+                                        </th>
+                                        <th class='head-primary'>
+                                            Dias para pagar
+                                        </th>
+                                        <th class='head-primary'>
+                                            Valor REAL
+                                        </th>
+                                        <th class='head-primary'>
+                                            Valor USD
+                                        </th>
+                                        <th class='head-primary'>
+                                            Opções
+                                        </th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id='embarques'>
+
+                                </tbody>
+
+                            </table>
+                        </div>
+
+                        <div class="card-footer">
+                            <span class="total"></span>
+                        </div>
+
+                    </div>
+
+                    <div class="card">
+                        <div class="header">
+                            <span class="title menu-item mr-2 ">Novo embarque</span>
+                        </div>
+
+                        <div class="content d-flex justify-content-center m-2 w-100">
+
+                            <form id="form-embarque" class='form w-50' method="POST">
+                                <div class="row d-flex justify-content-center">
+
+                                    <div id="new-embarque-card" class="form-group mw-75">
+
+                                        <label>Numero da fatura:</label>
+                                        <input id='new-embarque-id' name='new-embarque-id'
+                                            class="form-control border-input mb-2" placeholder="" required
+                                            type="text" />
+                                        <label>Nome do Cliente</label>
+                                        <input id='new-embarque-cliente' name='new-embarque-cliente' type="text"
+                                            class="form-control border-input mb-2" placeholder="" required />
+                                        <label>Data do Embarque</label>
+                                        <input id='new-embarque-date' name='new-embarque-date' type="date"
+                                            class="form-control border-input mb-2" placeholder="nome" required />
+                                        <label>Dias para pagar:</label>
+                                        <input id='new-embarque-period' name='new-embarque-id' type="number"
+                                            class="form-control border-input mb-2" placeholder="" required />
+                                        <label for="new-embarque-value">Entre o valor:</label>
+                                        <input id="new-embarque-value" type="text" name="new-value" type="number"
+                                            class="form-control border-input mb-2" placeholder="R$ 0,00" required>
+                                    </div>
+
+                                    <div class="row mw-75">
+                                        <div class="d-flex flex-row justify-content-end col">
+
+                                            <input id="confirm-embarque" class='btn my-2' type="submit"
+                                                form="fundos-form" value="Confirmar"></input>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="modal" id="delete-embarque-modal" tabindex="-1" role="dialog" aria-labelledby="deleteEmbarqueModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteEmbarqueModalLabel">Deletar fundo</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div id='delete-embarque-body' class="modal-body delete-body">
+          
+          <div id='delete-embarque-info'></div>
+
+          <input id="delete-embarque-id" type="text" style="display: none;">
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          <button id='confirm-delete-embarque' type="button" data-dismiss="modal" class="btn btn-danger">Quero deletar mesmo assim</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    <script src="https://hamiltonrios.web.app/assets/js/jquery-1.10.2.js" type="text/javascript"></script>
+    <script src="https://hamiltonrios.web.app/assets/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="https://hamiltonrios.web.app/assets/js/bootstrap-notify.js"></script>
+    <script src="https://hamiltonrios.web.app/assets/js/paper-dashboard.js" type="text/javascript"></script>
+
+    <script src="https://hamiltonrios.web.app/scripts/constants.js"></script>
+    <script src="https://hamiltonrios.web.app/scripts/edit.js"></script>
+    <script src="https://hamiltonrios.web.app/scripts/dolar.js"></script>
+
+    <!-- <script src="http://localhost:5000/scripts/edit.js"></script>
+    <script src="http://localhost:5000/scripts/dolar.js"></script>
+    <script src="http://localhost:5000/scripts/constants.js"></script> -->
+
+    <script>
+        window.onLoadCallback = function () {
+            //LOAD GOOGLE AUTH
+
+            gapi.load('auth2', function () {
+                // Retrieve the singleton for the GoogleAuth library and set up the client.
+                auth2 = gapi.auth2.init({
+                    client_id: "972835792340-81lomg4sb1ggpa31ad87irild3fcnftc.apps.googleusercontent.com",
+                    cookiepolicy: 'single_host_origin',
+                    // Request scopes in addition to 'profile' and 'email'
+                    //scope: 'additional_scope'
+                });
+            });
+        };
+
+
+        function logout() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+                console.log('User signed out.');
+                location.assign(BASEURL + '/login')
+            });
+        }
+
+        async function queryDatabase() {
+            cleanTable()
+
+            console.log('Getting in touch with embarques API ... ')
+
+            $.ajax({
+                type: 'GET',
+                url: EMBARQUES_URL,
+                xhrFields: {
+                    withCredentials: true
+                },
+                success: function (data) {
+
+                    console.log('Successfuly retrieved embarques');
+                    localStorage.setItem('embarques', data)
+                    loadEmbarques( data )
+                },
+                error: function (xhr, status, error) {
+                    console.log(error)
+                }
+            })
+
+        }
+
+        async function loadEmbarques(data) {
+
+            if( typeof(data) == "string" )
+                data = JSON.parse(data)
+
+                console.log('loading embarques')
+
+            let dolar_set = localStorage.getItem("dolar_set")
+
+            if (!dolar_set)
+                await getDolarFromDatabase();
+
+            let dolar_timestamp = localStorage.getItem("dolar_timestamp")
+            let dolar_quote = localStorage.getItem("dolar_quote")
+
+            $("#dolar").text(dolar_quote)
+            $("#dolar-timestamp").text(dolar_timestamp)
+
+            var total = 0
+
+            if (Object.keys(data).length < 1) {
+                $("#embarques").append($('<div>').text('Nenhum embarque aqui').addClass('d-flex flex-fill m-3 '))
+            }
+
+            Object.keys(data).map((id, i) => {
+                let td = $("<td>")
+
+                valor_real = parseFloat(data[id].REAL).toFixed(2)
+                valor_dolar = parseFloat(valor_real * 1 / dolar_quote).toFixed(2)
+                total = parseFloat(total) + parseFloat(valor_real)
+
+
+                let from = new Date( parseInt(data[id].data) )
+                    
+                console.log( data[id].data)
+                let hours = from.getHours()
+                let minutes = from.getMinutes() < 10 ? "0" + from.getMinutes() : from.getMinutes()
+                let date = from.getDate()
+                let month = from.getMonth() + 1
+                let datestr = `${date}/${month}`
+
+                var tr = $('<tr>').append(
+                    $('<td>').text(data[id].numFatura),
+                    $('<td>').text(data[id].nomeCliente),
+                    $('<td>').text(datestr),
+                    $('<td>').text(data[id].diasParaPagar),
+                    $('<td>').text("R" + parseCurrency(valor_real)),
+                    $('<td>').text(parseCurrency(valor_dolar)),
+                    $('<td>').append(
+                        $('<div>').addClass("d-flex justify-content-center").append(
+                            $('<button>').attr({
+                                "type": "button",
+                                "data-toggle": "modal",
+                                "data-target": "#edit-embarque-modal"
+                            })
+                            .on('click', (event) => editEmbarque(event, data[id]))
+                            .addClass('btn btn-primary-outline mx-1 edit-fund e' + i)
+                            .append(
+                                $('<i>').addClass('fas fa-edit').attr("style", "color:#666;")
+                            ),
+                            $('<button>').attr({
+                                "type": "button",
+                                "data-toggle": "modal",
+                                "data-target": "#delete-embarque-modal",
+                                "style": "color:#DD0000"
+                            })
+                            .on('click', (event) => modalDeleteEmbarque(id, data[id].nomeCliente))
+                            .addClass('btn danger mx-1 delete-fund d' + i)
+                            .append(
+                                $('<i>').addClass('fas fa-times').attr("style", "color:#DD0000;")
+                            )
+                        )
+                    ))
+
+                $('#embarques').append(tr)
+
+            })
+
+            let total_dolar = parseFloat(total * (1 / dolar_quote)).toFixed(2)
+            $('.total').text(
+                `Total: ${Object.keys(data).length},\tR${parseCurrency(total)}\t${parseCurrency(total_dolar)}`)
+        }
+
+        async function submitEmbarque(event) {
+
+            $('.help-block').remove()
+
+            let noerror = true
+
+            var success = 'Banco de dados atualizado com sucesso!'
+
+            let data = {
+                "numFatura": $("#new-embarque-id").val(),
+                "nomeCliente": $("#new-embarque-cliente").val(),
+                "data": $("#new-embarque-date").val(),
+                "diasParaPagar": $("#new-embarque-period").val(),
+                "REAL": $("#new-embarque-value").val()
+            }
+            
+            let errors = {
+                FATURA: "Insira o numero da fatura",
+                NOME: "Insira o nome do cliente",
+                DATA: "Insira a data do embarque",
+                DPP: "Insira o periodo de dias até o pagamento",
+                REAL: "Insira o valor do embarque em Reais"
+            }
+
+            // error handling
+
+            if (data.numFatura == undefined || data.numFatura.length == 0) {
+                $("#new-embarque-id").addClass("has-error");
+                $("#new-embarque-card").append('<div class="help-block">' + errors.FATURA + "</div>");
+                noerror = false
+            }
+            if (data.nomeCliente == undefined || data.nomeCliente.length == 0) {
+                $("#new-embarque-cliente").addClass("has-error");
+                $("#new-embarque-card").append('<div class="help-block">' + errors.NOME + "</div>");
+                noerror = false
+            }
+            if (data.data == undefined || data.data.length == 0) {
+                $("#new-embarque-date").addClass("has-error");
+                $("#new-embarque-card").append('<div class="help-block">' + errors.DATA + "</div>");
+                noerror = false
+            }
+            if (data.diasParaPagar == undefined || data.diasParaPagar.length == 0) {
+                $("#new-embarque-period").addClass("has-error");
+                $("#new-embarque-card").append('<div class="help-block">' + errors.DPP + "</div>");
+                noerror = false
+            }
+            if (data.REAL == undefined || data.REAL.length == 0) {
+                $("#new-embarque-value").addClass("has-error");
+                $("#new-embarque-card").append('<div class="help-block">' + errors.REAL + "</div>");
+                noerror = false
+            }
+
+
+            if (noerror) {
+                console.log(data);
+                $.ajax({
+                    type: 'POST',
+                    url: EMBARQUES_URL,
+                    data: data,
+                    dataType: "json",
+                    enconde: true,
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    success: () => {
+                        queryDatabase()
+                        $("#new-embarque-card").append('<div class="help-block">' + success + "</div>")
+                    }
+                })
+            } else {
+                console.log('tem erro ai')
+            }
+            event.preventDefault();
+        }
+
+        function modalDeleteEmbarque(id, nome) {
+             $("#delete-embarque-info").html(`<p>Tem certeza que quer deletar o embarque de <span id='delete-embarque-name'>${nome}</span> ?</p>`)
+             $("#delete-embarque-id").val(id)
+        }   
+
+        function deleteEmbarque(id)
+        {
+            $.ajax({
+                type:'DELETE',
+                url: BASEURL + '/api/embarques/' + id,
+                xhrFields: {
+                withCredentials: true
+                },
+                success:  function(data) {
+                    console.log(data)
+                    queryDatabase()
+                },
+                error: function(error) {
+                    console.log(error)
+                }
+                })
+            
+        }
+
+        function bindjs() {
+
+            $("#confirm-embarque").on("click", (event) => submitEmbarque(event))
+            $('#sync-embarques').on('click', () => queryDatabase())
+
+            $('#confirm-delete-embarque').on("click", (event) => {
+
+                let id = $("#delete-embarque-id").val()
+
+                deleteEmbarque(id)
+            })
+        }
+
+        document.addEventListener('DOMContentLoaded', async function () {
+
+            const USERNAME = await localStorage.getItem('username') || 'not logged in.'
+            const DOLAR_QUOTE = await localStorage.getItem('dolar_quote') || 'indefinido'
+            const DOLAR_TIMESTAMP = await localStorage.getItem('dolar_timestamp') ||
+            'clique acima para definir o dolar \nou atualize com o Banco Central'
+            const DOLAR_SET = await localStorage.setItem('dolar_set', false)
+            
+            bindjs()
+            bindDolarHtml(DOLAR_QUOTE, DOLAR_TIMESTAMP)
+            $("#username").text(USERNAME.replace(/"/g, ""))
+
+            await getDolarFromDatabase()
+
+            const embarques = await localStorage.getItem('embarques') || false
+
+            if (embarques) {
+                await loadEmbarques(embarques)
+
+            } else {
+                await queryDatabase()
+            }
+
+
+
+        })
+    </script>
+</body>
+
+</html>

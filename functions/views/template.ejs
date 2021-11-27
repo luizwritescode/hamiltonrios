@@ -163,10 +163,7 @@
     <script src="https://hamiltonrios.web.app/scripts/edit.js"></script>
     <script src="https://hamiltonrios.web.app/scripts/dolar.js"></script>
 
-   <!-- <script src="http://localhost:5000/scripts/edit.js"></script>
-    <script src="http://localhost:5000/scripts/dolar.js"></script>
-    <script src="http://localhost:5000/scripts/constants.js"></script> -->
-    
+
     <script>
 
       window.onLoadCallback = function () {
@@ -188,7 +185,7 @@
         var auth2 = gapi.auth2.getAuthInstance();
         auth2.signOut().then(function () {
           console.log('User signed out.');
-          location.assign(BASEURL + '/login')
+          location.assign(PRODURL + '/login')
         });
       }
 

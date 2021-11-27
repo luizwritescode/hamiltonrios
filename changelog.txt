@@ -43,6 +43,16 @@ v1.0.2
  - Create, Delete fundos atualizam o banco de dados e dolar automaticamente
 
 
+v1.0.3
+-------
+[*] Esqueleto Embarques firestore
+[*] Funções de Read, Create and Delete Embarques feito falta Update 
+
+[!] Bug: Embarques carregam direito no local mas nao na versao de producao
+
+[#] fixed bug que um update em fundos mexia no dolar 
+[#] fixed bug edit fundo adcionava um novo como mesmo nome
+[#] pode ter algo quebrado em fundos depois que mexi no servidor
 
 
 
