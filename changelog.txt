@@ -36,7 +36,6 @@ v1.0.1
 
 [!] Bugs
 
-
 v1.0.2
 -------
 [!] Bug Fix
@@ -54,7 +53,12 @@ v1.0.3
 [#] fixed bug edit fundo adcionava um novo como mesmo nome
 [#] pode ter algo quebrado em fundos depois que mexi no servidor
 
+v1.0.4
+-------
+[*] Funções de embarque feitas (falta testar)
 
+[#] Fixed icone favicon
+[#] Fixed auth bug agora o site esta seguro contra quem nao tem login (falta testar)
 
 
 

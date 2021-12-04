@@ -14,6 +14,7 @@ const client = new OAuth2Client(process.env.OAUTH_CLIENT_ID,);
 import favicon from 'serve-favicon';
 
 import admin from 'firebase-admin';
+import e from 'cors';
 
 const firebaseConfig = {
     apiKey: process.env.apiKey,
@@ -59,15 +60,16 @@ app.use(cors({
 }))
 
 app.use('/favicon.ico', express.static('/public/images/favicon.ico'))
+
 app.use(express.static('public'))
 
-//app.use('/', checkAuth )
+app.use('/api', checkAuth )
 
 //app.use(express.static('public'))
 
-app.get('/', (req,res) => { return res.render('index')})
+app.get('/', checkAuth, (req,res) => { return res.render('index')})
 
-app.get('/dashboard', (req,res)=> {
+app.get('/dashboard', checkAuth, (req,res)=> {
        return res.render('index')
 })
 
@@ -99,7 +101,7 @@ app.post('/login', (req,res) => {
       .catch(console.error);
 })
 
-app.get('/fundos', (req,res)=> {
+app.get('/fundos', checkAuth, (req,res)=> {
     let user = req.user
 
     if( res.statusCode == 200) 
@@ -107,7 +109,7 @@ app.get('/fundos', (req,res)=> {
     return res.send("success")
 })
 
-app.get('/embarques', (req,res)=> {
+app.get('/embarques', checkAuth, (req,res)=> {
     if( res.statusCode == 200) 
         res.render('embarques')
     return res.send("success")
@@ -166,8 +168,6 @@ app.post('/api/fundos', (req, res) => {
 })
 
 app.post('/api/fundos/:id', (req,res) => {
-    
-    console.log(req.body)
 
     let body = JSON.parse( Object.keys(req.body) )
 
@@ -281,7 +281,6 @@ app.post('/api/embarques', (req, res) => {
 
     let body = req.body
     
-    console.log(body);
     let editMode = false
     
     let obj = { "numFatura": body.numFatura, "nomeCliente": body.nomeCliente, "data": body.data, "diasParaPagar": body.diasParaPagar, "REAL": body.REAL }
@@ -301,6 +300,31 @@ app.post('/api/embarques', (req, res) => {
     
 
    
+})
+
+app.post('/api/embarques/:id', (req, res) => {
+
+    let body = req.body
+    
+    let numFatura = body.numFatura
+    let nomeCliente = body.nomeCliente
+    let data = body.data
+    let diasParaPagar = body.diasParaPagar
+    let REAL = body.REAL
+
+    let id = req.params.id
+
+    let obj = {"numFatura": numFatura, "nomeCliente": nomeCliente, "data": data, "diasParaPagar": diasParaPagar, "REAL": REAL}
+
+    db.collection("embarques")
+    .doc(id)
+    .set(obj, {merge:true})
+    .then((sent)=> {
+        res.status(200).json(sent)
+    })
+    .catch((e) => {
+        res.status(400).json(e)
+    })
 })
 
 
@@ -330,14 +354,14 @@ app.delete('/api/embarques/:id', (req, res) => {
 function checkAuth(req, res, next) {
     
     let token = req.cookies['session-token']
-    let user = {};
+    let user = { name:"", email:"", picture: ""};
     async function verify() {
         const ticket = await client.verifyIdToken({
             idToken: token,
             audience: process.env.OAUTH_CLIENT_ID
         });
         const payload = ticket.getPayload();
-       user.name = playload.name;
+       user.name = payload.name;
        user.email = payload.email;
        user.picture = payload.picture;
       }

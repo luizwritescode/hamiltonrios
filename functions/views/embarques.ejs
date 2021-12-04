@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Hamilton Rios</title>
 
+    <!-- FAVICON -->
+    <link rel="icon" href="./images/favicon.ico" />
+
     <!--  GOOGLE -->
     <meta name="google-signin-client_id"
         content="972835792340-3m1k3q9chcsv1vqfjoq3kiplnejt7tpf.apps.googleusercontent.com">
@@ -208,6 +211,7 @@
                                         <label>Dias para pagar:</label>
                                         <input id='new-embarque-period' name='new-embarque-id' type="number"
                                             class="form-control border-input mb-2" placeholder="" required />
+                                            
                                         <label for="new-embarque-value">Entre o valor:</label>
                                         <input id="new-embarque-value" type="text" name="new-value" type="number"
                                             class="form-control border-input mb-2" placeholder="R$ 0,00" required>
@@ -236,6 +240,46 @@
     </div>
     </div>
 
+    <div class="modal" id="edit-embarque-modal" tabindex="-1" role="dialog" aria-labelledby="Editar o valor do embarque" 
+    aria-hidden="true" >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editEmbarqueModalLabel">Editar embarque</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div id='edit-embarque-body' class="modal-body edit-body form-group">
+            <form method='POST' name='edit-fund'>
+
+                <input type="text" id="edit-embarque-id" style='display:none;'>
+
+              <label for="edit-embarque-fatura">Insira um novo numero da fatura para o embarque:</label>
+              <input id="edit-embarque-fatura" type="text" name="edit-embarque-id" placeholder="" class='form-control border-input m-2'>
+
+              <label for="edit-embarque-name">Insira um novo nome para o embarque:</label>
+              <input id="edit-embarque-name" type="text" name="edit-embarque-name" placeholder="" class='form-control border-input m-2'>
+
+              <label for="edit-embarque-date">Insira uma nova data para o embarque:</label>
+              <input id="edit-embarque-date" type="date" name="edit-embarque-date" placeholder="" class='form-control border-input m-2'>
+
+              <label for="edit-embarque-period">Insira a quantidade de dias para o cliente pagar:</label>
+              <input id="edit-embarque-period" type="number" name="edit-embarque-period" placeholder="" class='form-control border-input m-2'>
+
+              <label for="edit-embarque-real">Insira um novo valor para o embarque:</label>
+              <input id="edit-embarque-real" type="number" name="edit-embarque-real" placeholder="" class='form-control border-input m-2'>
+
+            
+            </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          <button id="confirm-edit-embarque" type="button" data-dismiss="modal" class="btn btn-primary">Salvar mudanças</button>
+        </div>
+      </div>
+    </div>
+  </div>
     <div class="modal" id="delete-embarque-modal" tabindex="-1" role="dialog" aria-labelledby="deleteEmbarqueModalLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -270,8 +314,8 @@
     <script src="https://hamiltonrios.web.app/scripts/constants.js"></script>
     <script src="https://hamiltonrios.web.app/scripts/edit.js"></script>
     <script src="https://hamiltonrios.web.app/scripts/dolar.js"></script>
-
-    <!-- <script src="http://localhost:5000/scripts/edit.js"></script>
+<!-- 
+    <script src="http://localhost:5000/scripts/edit.js"></script>
     <script src="http://localhost:5000/scripts/dolar.js"></script>
     <script src="http://localhost:5000/scripts/constants.js"></script> -->
 
@@ -355,14 +399,13 @@
                 total = parseFloat(total) + parseFloat(valor_real)
 
 
-                let from = new Date( parseInt(data[id].data) )
+                let from = new Date( data[id].data )
                     
-                console.log( data[id].data)
-                let hours = from.getHours()
-                let minutes = from.getMinutes() < 10 ? "0" + from.getMinutes() : from.getMinutes()
+                console.log( data[id].data )
                 let date = from.getDate()
                 let month = from.getMonth() + 1
-                let datestr = `${date}/${month}`
+                let year = from.getFullYear()
+                let datestr = `${date} / ${month} / ${year}`
 
                 var tr = $('<tr>').append(
                     $('<td>').text(data[id].numFatura),
@@ -378,7 +421,7 @@
                                 "data-toggle": "modal",
                                 "data-target": "#edit-embarque-modal"
                             })
-                            .on('click', (event) => editEmbarque(event, data[id]))
+                            .on('click', (event) => modalEditEmbarque(id, data[id]))
                             .addClass('btn btn-primary-outline mx-1 edit-fund e' + i)
                             .append(
                                 $('<i>').addClass('fas fa-edit').attr("style", "color:#666;")
@@ -481,6 +524,90 @@
             event.preventDefault();
         }
 
+        async function submitEditEmbarque(event) {
+            $('.help-block').remove()
+
+            let noerror = true
+
+            var success = 'Banco de dados atualizado com sucesso!'
+
+            let id = $("#edit-embarque-id").val()
+
+            let data = {
+                "numFatura": $("#edit-embarque-fatura").val(),
+                "nomeCliente": $("#edit-embarque-name").val(),
+                "data": $("#edit-embarque-date").val(),
+                "diasParaPagar": $("#edit-embarque-period").val(),
+                "REAL": $("#edit-embarque-real").val()
+            }
+
+            
+            let errors = {
+                FATURA: "Insira o numero da fatura",
+                NOME: "Insira o nome do cliente",
+                DATA: "Insira a data do embarque",
+                DPP: "Insira o periodo de dias até o pagamento",
+                REAL: "Insira o valor do embarque em Reais"
+            }
+
+            if (data.numFatura == undefined || data.numFatura.length == 0) {
+                $("#edit-embarque-fatura").addClass("has-error");
+                $("#edit-embarque-body").append('<div class="help-block">' + errors.FATURA + "</div>");
+                noerror = false
+            }
+            if (data.nomeCliente == undefined || data.nomeCliente.length == 0) {
+                $("#edit-embarque-name").addClass("has-error");
+                $("#edit-embarque-body").append('<div class="help-block">' + errors.NOME + "</div>");
+                noerror = false
+            }
+            if (data.data == undefined || data.data.length == 0) {
+                $("#edit-embarque-date").addClass("has-error");
+                $("#edit-embarque-body").append('<div class="help-block">' + errors.DATA + "</div>");
+                noerror = false
+            }
+            if (data.diasParaPagar == undefined || data.diasParaPagar.length == 0) {
+                $("#edit-embarque-period").addClass("has-error");
+                $("#edit-embarque-body").append('<div class="help-block">' + errors.DPP + "</div>");
+                noerror = false
+            }
+            if (data.REAL == undefined || data.REAL.length == 0) {
+                $("#edit-embarque-real").addClass("has-error");
+                $("#edit-embarque-body").append('<div class="help-block">' + errors.REAL + "</div>");
+                noerror = false
+            }
+
+            if (noerror) {
+                console.log(data);
+                $.ajax({
+                    type: 'POST',
+                    url: EMBARQUES_URL + '/' + id,
+                    data: data,
+                    dataType: "json",
+                    enconde: true,
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    success: () => {
+                        queryDatabase()
+                        $("#new-embarque-card").append('<div class="help-block">' + success + "</div>")
+                    }
+                })
+            } else {
+                console.log('tem erro ai')
+            }
+            event.preventDefault();
+
+        }
+
+        function modalEditEmbarque( id,  embarque ) {
+            $('#edit-embarque-id').val( id )
+            $('#edit-embarque-fatura').val(embarque.numFatura)
+            $('#edit-embarque-name').val(embarque.nomeCliente)
+            $('#edit-embarque-date').val(embarque.data)
+            $('#edit-embarque-period').val(embarque.diasParaPagar)
+            $('#edit-embarque-real').val(embarque.REAL)
+        }
+
         function modalDeleteEmbarque(id, nome) {
              $("#delete-embarque-info").html(`<p>Tem certeza que quer deletar o embarque de <span id='delete-embarque-name'>${nome}</span> ?</p>`)
              $("#delete-embarque-id").val(id)
@@ -509,11 +636,10 @@
 
             $("#confirm-embarque").on("click", (event) => submitEmbarque(event))
             $('#sync-embarques').on('click', () => queryDatabase())
-
+            
+            $('#confirm-edit-embarque').on('click', (event) => submitEditEmbarque(event))
             $('#confirm-delete-embarque').on("click", (event) => {
-
                 let id = $("#delete-embarque-id").val()
-
                 deleteEmbarque(id)
             })
         }
