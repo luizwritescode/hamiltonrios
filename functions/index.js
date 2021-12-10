@@ -371,7 +371,7 @@ function checkAuth(req, res, next) {
           next();
         }).catch(err=>{
             console.error(err)
-            //res.redirect('/default/login')
+            res.redirect('/default/login')
         })
   
         

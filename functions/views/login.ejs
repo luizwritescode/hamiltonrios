@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Hamilton Rios</title>
 
+     <!-- FAVICON -->
+    <link rel="icon" href="./images/favicon.ico" />
+
     <!-- GOOGLE -->
     <meta name="google-signin-client_id"
        content="972835792340-3m1k3q9chcsv1vqfjoq3kiplnejt7tpf.apps.googleusercontent.com">
@@ -20,18 +23,18 @@
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
     <!--  FONT AWESOME -->
-    <link href="http://localhost:5000/assets/css/all.min.css">
+    <link href="http://hamiltonrios.web.app/assets/css/all.min.css">
 
-    <script defer src="http://localhost:5000/assets/js/all.min.js"></script>
+    <script defer src="http://hamiltonrios.web.app/assets/js/all.min.js"></script>
 
     <!--  PAPER DASHBOARD -->
-    <link href="http://localhost:5000/assets/css/animate.min.css" rel="stylesheet">
-    <link href="http://localhost:5000/assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="http://localhost:5000/assets/css/paper-dashboard.css" rel="stylesheet">
+    <link href="http://hamiltonrios.web.app/assets/css/animate.min.css" rel="stylesheet">
+    <link href="http://hamiltonrios.web.app/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://hamiltonrios.web.app/assets/css/paper-dashboard.css" rel="stylesheet">
 
     <!--  CUSTOM CODE -->
-    <link href="http://localhost:5000/assets/css/styles.css" rel="stylesheet">
-    <link src="http://localhost:5000/assets/css/animation.css" rel="stylesheet">
+    <link href="http://hamiltonrios.web.app/assets/css/styles.css" rel="stylesheet">
+    <link src="http://hamiltonrios.web.app/assets/css/animation.css" rel="stylesheet">
 
     <style media="screen">
         body {
@@ -120,15 +123,16 @@
         </div>
     </div>
 
-    <script src="http://localhost:5000/assets/js/jquery-1.10.2.js" type="text/javascript"></script>
-    <script src="http://localhost:5000/assets/js/bootstrap.min.js" type="text/javascript"></script>
-    <script src="http://localhost:5000/assets/js/bootstrap-notify.js"></script>
-    <script src="http://localhost:5000/assets/js/paper-dashboard.js" type="text/javascript"></script>
+    <script src="https://hamiltonrios.web.app/assets/js/jquery-1.10.2.js" type="text/javascript"></script>
+    <script src="https://hamiltonrios.web.app/assets/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="https://hamiltonrios.web.app/assets/js/bootstrap-notify.js"></script>
+    <script src="https://hamiltonrios.web.app/assets/js/paper-dashboard.js" type="text/javascript"></script>
+  
+    <script src="https://hamiltonrios.web.app/scripts/constants.js"></script>
+  
 
     <script>
         var googleUser = {};
-        const BASEURL = "http://localhost:5001/hamiltonrios-e760f/us-central1/default"
-        const PRODURL = "https://us-central1-hamiltonrios-e760f.cloudfunctions.net/default"
 
         window.onLoadCallback = function () {
             gapi.load('auth2', function () {
@@ -172,7 +176,7 @@
                 if(xhr.responseText == 'success')
                 localStorage.setItem("current-user", id_token);
                 console.log('Signed in as: ' + username );
-                location.assign( PRODURL + '/dashboard' )
+                location.assign( BASEURL + '/dashboard' )
             };
             xhr.send(JSON.stringify({token: id_token}));
         }
@@ -197,7 +201,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: PRODURL + '/login',
+                    url: BASEURL + '/login',
                     data: this.serialize(),
 
                 })
